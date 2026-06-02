@@ -38,18 +38,72 @@ public class HealthKitConstants {
 
     static let healthKitCategoryTypes: Set<HKCategoryType> = Set(arrayLiteral:
         HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sleepAnalysis)!,
+        // Reproductive Health
         HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.cervicalMucusQuality)!,
         HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.ovulationTestResult)!,
         HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.menstrualFlow)!,
         HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.intermenstrualBleeding)!,
-		HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sexualActivity)!,
-		HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.mindfulSession)!
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sexualActivity)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.pregnancy)!,              // iOS 14.3+
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.lactation)!,              // iOS 14.3+
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.contraceptive)!,          // iOS 14.3+
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.pregnancyTestResult)!,    // iOS 15+
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.progesteroneTestResult)!, // iOS 15+
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.mindfulSession)!,
+        // Symptoms — HKCategoryValueSeverity (iOS 13.6+)
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.abdominalCramps)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.acne)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.bladderIncontinence)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.bloating)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.breastPain)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.chills)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.constipation)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.diarrhea)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.dizziness)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.drySkin)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.fatigue)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.hairLoss)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.headache)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.hotFlashes)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.lowerBackPain)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.memoryLapse)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.nausea)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.nightSweats)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.pelvicPain)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.rapidPoundingOrFlutteringHeartbeat)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.runnyNose)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sinusCongestion)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.skippedHeartbeat)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.soreThroat)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.vaginalDryness)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.vomiting)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.generalizedBodyAche)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.chestTightnessOrPain)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.coughing)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.fainting)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.fever)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.heartburn)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.lossOfSmell)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.lossOfTaste)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.shortnessOfBreath)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.wheezing)!,
+        // Symptoms — HKCategoryValuePresence (iOS 13.6+)
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.moodChanges)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sleepChanges)!,
+        // Symptoms — HKCategoryValueAppetiteChanges (iOS 13.6+)
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.appetiteChanges)!
 //        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.appleStandHour)!
     )
 
     // not writable
     static let healthKitCategoryLockedTypes: Set<HKCategoryType> = Set(arrayLiteral:
-        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.appleStandHour)!
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.appleStandHour)!,
+        // Cycle irregularities are READ-ONLY — computed by HealthKit from logged cycle data.
+        // Third-party apps cannot write these directly; requesting write access crashes the app.
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.infrequentMenstrualCycles)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.irregularMenstrualCycles)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.persistentIntermenstrualBleeding)!,
+        HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.prolongedMenstrualPeriods)!
     )
 
     static let healthKitQuantityTypes: Set<HKQuantityType> = Set(arrayLiteral:
@@ -144,11 +198,22 @@ public class HealthKitConstants {
     
     static let heartbeatSeriesType = HKSeriesType.heartbeat() //HKObjectType.seriesType(forIdentifier: HKDataTypeIdentifierHeartbeatSeries)
 
+    /// Bleeding category types requiring iOS 18+.
+    static func healthKitCategoryTypesiOS18() -> Set<HKCategoryType> {
+        var types = Set<HKCategoryType>()
+        if #available(iOS 18.0, macOS 15.0, *) {
+            types.insert(HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.bleedingAfterPregnancy)!)
+            types.insert(HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.bleedingDuringPregnancy)!)
+        }
+        return types
+    }
+
     static func allTypes() -> Set<HKObjectType> {
         var allTypes : Set<HKObjectType> = Set()
         allTypes.formUnion((healthKitCharacteristicsTypes as Set<HKObjectType>?)!)
         allTypes.formUnion((healthKitQuantityTypes as Set<HKObjectType>?)!)
         allTypes.formUnion((healthKitCategoryTypes as Set<HKObjectType>?)!)
+        allTypes.formUnion((healthKitCategoryTypesiOS18() as Set<HKObjectType>?)!)
         allTypes.formUnion((healthKitCorrelationTypes as Set<HKObjectType>?)!)
         allTypes.insert(workoutType)
         return allTypes
@@ -161,6 +226,7 @@ public class HealthKitConstants {
         authTypes.formUnion((HealthKitConstants.healthKitQuantityLockedTypes as Set<HKObjectType>?)!)
         authTypes.formUnion((HealthKitConstants.healthKitCategoryTypes as Set<HKObjectType>?)!)
         authTypes.formUnion((HealthKitConstants.healthKitCategoryLockedTypes as Set<HKObjectType>?)!)
+        authTypes.formUnion((HealthKitConstants.healthKitCategoryTypesiOS18() as Set<HKObjectType>?)!)
         authTypes.insert(HealthKitConstants.workoutType)
         return authTypes
     }
@@ -169,10 +235,10 @@ public class HealthKitConstants {
          var authTypes : Set<HKSampleType> = Set()
         authTypes.formUnion((HealthKitConstants.healthKitQuantityTypes as Set<HKSampleType>?)!)
         authTypes.formUnion((HealthKitConstants.healthKitCategoryTypes as Set<HKSampleType>?)!)
+        authTypes.formUnion((HealthKitConstants.healthKitCategoryTypesiOS18() as Set<HKSampleType>?)!)
         authTypes.insert(HealthKitConstants.workoutType)
         authTypes.insert(HealthKitConstants.heartbeatSeriesType)
         return authTypes
     }
 
 }
-

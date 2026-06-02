@@ -61,23 +61,23 @@ extension SampleCreator {
     /// - Returns: a tupel with the start date and the end date
     func dictToTimeframe(_ dict:Dictionary<String, AnyObject>) -> (sDate:Date, eDate:Date) {
 
-		let startDate: Date
-		if let timestamp = dict[HealthKitConstants.S_DATE] as? Double {
-			startDate = Date(timeIntervalSince1970: timestamp / 1000)
-		} else if let stringDate = dict[HealthKitConstants.S_DATE] as? String {
+        let startDate: Date
+        if let timestamp = dict[HealthKitConstants.S_DATE] as? Double {
+            startDate = Date(timeIntervalSince1970: timestamp / 1000)
+        } else if let stringDate = dict[HealthKitConstants.S_DATE] as? String {
             startDate = (try? stringDate.date(.iso8601)) ?? Date()
-		} else {
-			startDate = Date()
-		}
+        } else {
+            startDate = Date()
+        }
 
-		let endDate: Date
-		if let timestamp = dict[HealthKitConstants.E_DATE] as? Double {
-			endDate = Date(timeIntervalSince1970: timestamp / 1000)
-		} else if let stringDate = dict[HealthKitConstants.E_DATE] as? String {
-			endDate = (try? stringDate.date(.iso8601)) ?? Date()
-		} else {
-			endDate = startDate
-		}
+        let endDate: Date
+        if let timestamp = dict[HealthKitConstants.E_DATE] as? Double {
+            endDate = Date(timeIntervalSince1970: timestamp / 1000)
+        } else if let stringDate = dict[HealthKitConstants.E_DATE] as? String {
+            endDate = (try? stringDate.date(.iso8601)) ?? Date()
+        } else {
+            endDate = startDate
+        }
 
         return (startDate, endDate)
     }
@@ -90,7 +90,17 @@ extension SampleCreator {
         let value = dict[HealthKitConstants.VALUE] as? Int ?? 0
         let dates = dictToTimeframe(dict)
 
-        return HKCategorySample(type: type, value: value, start: dates.sDate , end: dates.eDate)
+        // HKCategoryTypeIdentifierMenstrualFlow requires HKMetadataKeyMenstrualCycleStart.
+        // We read the flat "isCycleStart" field written by SampleDataGenerator and inject the
+        // metadata at the Swift level to avoid the JSON tokenizer pipeline dropping nested dicts.
+        if type.identifier == HKCategoryTypeIdentifier.menstrualFlow.rawValue {
+            let isCycleStart = dict["isCycleStart"] as? Bool ?? false
+            let metadata: [String: Any] = [HKMetadataKeyMenstrualCycleStart: isCycleStart]
+            return HKCategorySample(type: type, value: value, start: dates.sDate, end: dates.eDate, metadata: metadata)
+        }
+
+        let metadata = dict[HealthKitConstants.META_DATA] as? [String: Any]
+        return HKCategorySample(type: type, value: value, start: dates.sDate, end: dates.eDate, metadata: metadata)
     }
 
     /// Converts a json dictionary into a Quantity Sample
@@ -211,7 +221,7 @@ class WorkoutSampleCreator : SampleCreator {
                     if let subDict = workoutEvent as? Dictionary<String, AnyObject> {
                         let eventTypeRaw = subDict[HealthKitConstants.TYPE] as? Int
                         let eventType = HKWorkoutEventType(rawValue: eventTypeRaw!)!
-						let startDate = dictToTimeframe(subDict).sDate
+                        let startDate = dictToTimeframe(subDict).sDate
                         events.append(HKWorkoutEvent(type: eventType, date: startDate))
                     }
                 }
@@ -328,4 +338,3 @@ class HeartbeatSeriesSampleCreator: SampleCreator {
         }
     }
 }
-

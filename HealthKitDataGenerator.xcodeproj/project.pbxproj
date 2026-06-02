@@ -1,0 +1,795 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05D72BD0BA65F784FCED2724 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE87573A743E4618E114E5DE /* DateExtensions.swift */; };
+		1A962F4C2AAC092FF3E2C1F5 /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E598396C70C8D43B7FBF5E /* LLMManager.swift */; };
+		221BE375FEE3A04176D4E1AF /* JsonWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B825F2125DC22B409DDAD3 /* JsonWriter.swift */; };
+		27DF6349E4D8CE6C3899F1B0 /* Logging.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = B2B03D661FF0F5F384228C89 /* Logging.framework */; };
+		2F31298486CB81D544EA2100 /* AppleFoundationModelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD042686D7A3BEA59C35036 /* AppleFoundationModelProvider.swift */; };
+		333E56ABAF25F561164292C5 /* HealthKitDataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5698F6CBBCFBDDBC1200B /* HealthKitDataGenerator.swift */; };
+		3342952EDCE66715BEA13C41 /* HealthKitConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B91884B75A80D558AC1756 /* HealthKitConstants.swift */; };
+		39F23C3E16EFDD54E29E8D89 /* OutputStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F2BA0141EF94763C0D8E01 /* OutputStreams.swift */; };
+		3A35BFDF557A4BE1A7F4B8FA /* JsonReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D9E7C39B46D2FD38247C4 /* JsonReader.swift */; };
+		3A419ABC02833DD9189A7BA2 /* JsonTokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE446B43FA7F751584960D9F /* JsonTokenizer.swift */; };
+		3CD787FF428FC1F61A677044 /* ExportTargets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3E7C40B4C4013ADCB700FD /* ExportTargets.swift */; };
+		5E1780DAB32784D34713F93A /* JsonHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAA12FBCBBFBA41E789C50 /* JsonHandlerProtocol.swift */; };
+		6641E490F43EF768723C3EA7 /* ExportConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9380AAACA7A222A61DC82B85 /* ExportConfiguration.swift */; };
+		6C278B9C4261E920FCE8E5C4 /* Logging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2B03D661FF0F5F384228C89 /* Logging.framework */; };
+		6CF30FC732E2822637EBF085 /* SampleDataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BD0A30C912660708E25027 /* SampleDataGenerator.swift */; };
+		7A98A36FF6116B743FBF7A9D /* SampleGenerationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B946A93CF3F4D8FC7AEF43D /* SampleGenerationConfig.swift */; };
+		808971C3CF2EA905082469B1 /* HealthKitProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479543FE74F92C5AD0AB8D53 /* HealthKitProfile.swift */; };
+		8523E5FC281B12F224C6036C /* FileNameUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31109EFAB26E5DAD048B3ADB /* FileNameUtil.swift */; };
+		9950BC2FDFCAE14B5CAEA088 /* HealthKitStoreCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1E0E3A5BEACEE66A8A2E1E /* HealthKitStoreCleaner.swift */; };
+		A32CF4DDC59770998472046C /* HealthProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EE823FA0346A2ABE51EE87 /* HealthProfile.swift */; };
+		B13FFFE82F982E23B2190D7F /* HealthKitDataGenerator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CC18DCA3B00EAB124BEC8F /* HealthKitDataGenerator.framework */; };
+		B1746B3261ACF8FAED86DEC0 /* LLMProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3A90EF2A3EF1139C4DD59D /* LLMProvider.swift */; };
+		B2940C80EF90EE26569990D3 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCF8697A4E0B6F63DCF5A8F /* AppLogger.swift */; };
+		D48EA0782817E6D54798FC92 /* HealthKitProfileImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946463289AFCF963D847A8B /* HealthKitProfileImporter.swift */; };
+		D6824F067BC170945760E607 /* SampleCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A97E0904942F7C032A096E /* SampleCreator.swift */; };
+		E56A56378A473DB7211BAEDA /* HealthKitDataGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ACE2DA25CE320EC294A35E /* HealthKitDataGeneratorTests.swift */; };
+		EF63F83FC0169D69B74FD3D4 /* HealthKitProfileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457E131230677DFB01ADEBED /* HealthKitProfileReader.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2286BD6B85B31140ABA4858F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A13F535155BC2A301789406B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 490B9797747F8C975F894F05;
+			remoteInfo = HealthKitDataGenerator;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1288D301E230DC33FB69D59B /* Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstSubfolderSpec = 16;
+			files = (
+				27DF6349E4D8CE6C3899F1B0 /* Logging.framework in Dependencies */,
+			);
+			name = Dependencies;
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		48174224D46BC7FA2975563B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C50729EED47277F3A3DD88CD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		05CC18DCA3B00EAB124BEC8F /* HealthKitDataGenerator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HealthKitDataGenerator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C3E7C40B4C4013ADCB700FD /* ExportTargets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTargets.swift; sourceTree = "<group>"; };
+		15EE823FA0346A2ABE51EE87 /* HealthProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthProfile.swift; sourceTree = "<group>"; };
+		25CAA12FBCBBFBA41E789C50 /* JsonHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonHandlerProtocol.swift; sourceTree = "<group>"; };
+		31109EFAB26E5DAD048B3ADB /* FileNameUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNameUtil.swift; sourceTree = "<group>"; };
+		32ACE2DA25CE320EC294A35E /* HealthKitDataGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataGeneratorTests.swift; sourceTree = "<group>"; };
+		38B825F2125DC22B409DDAD3 /* JsonWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonWriter.swift; sourceTree = "<group>"; };
+		39A97E0904942F7C032A096E /* SampleCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCreator.swift; sourceTree = "<group>"; };
+		39E598396C70C8D43B7FBF5E /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
+		3AA5698F6CBBCFBDDBC1200B /* HealthKitDataGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitDataGenerator.swift; sourceTree = "<group>"; };
+		457E131230677DFB01ADEBED /* HealthKitProfileReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitProfileReader.swift; sourceTree = "<group>"; };
+		479543FE74F92C5AD0AB8D53 /* HealthKitProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitProfile.swift; sourceTree = "<group>"; };
+		5B946A93CF3F4D8FC7AEF43D /* SampleGenerationConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGenerationConfig.swift; sourceTree = "<group>"; };
+		69F2BA0141EF94763C0D8E01 /* OutputStreams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputStreams.swift; sourceTree = "<group>"; };
+		6CCF8697A4E0B6F63DCF5A8F /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		6CEDE9B5F81EBE08EE2D8AD2 /* HealthKitDataGeneratorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "HealthKitDataGeneratorTests-Info.plist"; sourceTree = "<group>"; };
+		7C3D9E7C39B46D2FD38247C4 /* JsonReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonReader.swift; sourceTree = "<group>"; };
+		82BD0A30C912660708E25027 /* SampleDataGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataGenerator.swift; sourceTree = "<group>"; };
+		85B91884B75A80D558AC1756 /* HealthKitConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitConstants.swift; sourceTree = "<group>"; };
+		895A77AEC7119D9248530D03 /* HealthKitDataGenerator-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "HealthKitDataGenerator-Info.plist"; sourceTree = "<group>"; };
+		9380AAACA7A222A61DC82B85 /* ExportConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportConfiguration.swift; sourceTree = "<group>"; };
+		9AD042686D7A3BEA59C35036 /* AppleFoundationModelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleFoundationModelProvider.swift; sourceTree = "<group>"; };
+		9D3A90EF2A3EF1139C4DD59D /* LLMProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProvider.swift; sourceTree = "<group>"; };
+		B2B03D661FF0F5F384228C89 /* Logging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Logging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4E4AF2A0E018EB76E2D2F57 /* HealthKitDataGeneratorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HealthKitDataGeneratorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE87573A743E4618E114E5DE /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		BF1E0E3A5BEACEE66A8A2E1E /* HealthKitStoreCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitStoreCleaner.swift; sourceTree = "<group>"; };
+		EE446B43FA7F751584960D9F /* JsonTokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonTokenizer.swift; sourceTree = "<group>"; };
+		F946463289AFCF963D847A8B /* HealthKitProfileImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitProfileImporter.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		203CEE1E83417246427761C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B13FFFE82F982E23B2190D7F /* HealthKitDataGenerator.framework in Frameworks */,
+				6C278B9C4261E920FCE8E5C4 /* Logging.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B32CA545D62BB08CE87D4A05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AE729978ACE3AD944D80633 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				84EF16B4F4A404B985EAA6B9 /* Derived */,
+				DFB312C74D4A274FAEA7522E /* Sources */,
+				26EA4356AB1407E291F9C602 /* Tests */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		26EA4356AB1407E291F9C602 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				4FA28824204C86E32D22AA51 /* HealthKitDataGeneratorTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		3BDA48644CD6893EAD0AFC87 /* DataExport */ = {
+			isa = PBXGroup;
+			children = (
+				9380AAACA7A222A61DC82B85 /* ExportConfiguration.swift */,
+				0C3E7C40B4C4013ADCB700FD /* ExportTargets.swift */,
+			);
+			path = DataExport;
+			sourceTree = "<group>";
+		};
+		429EFDE99C2C44A1861CB940 /* LLM */ = {
+			isa = PBXGroup;
+			children = (
+				9AD042686D7A3BEA59C35036 /* AppleFoundationModelProvider.swift */,
+				39E598396C70C8D43B7FBF5E /* LLMManager.swift */,
+				9D3A90EF2A3EF1139C4DD59D /* LLMProvider.swift */,
+			);
+			path = LLM;
+			sourceTree = "<group>";
+		};
+		4C69B5FD70AB49C73284C88E = {
+			isa = PBXGroup;
+			children = (
+				E4E86361371D4FBE02B8809F /* Products */,
+				1AE729978ACE3AD944D80633 /* Project */,
+			);
+			sourceTree = "<group>";
+		};
+		4FA28824204C86E32D22AA51 /* HealthKitDataGeneratorTests */ = {
+			isa = PBXGroup;
+			children = (
+				32ACE2DA25CE320EC294A35E /* HealthKitDataGeneratorTests.swift */,
+			);
+			path = HealthKitDataGeneratorTests;
+			sourceTree = "<group>";
+		};
+		66AA5A9D5687A626A760ED06 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				3AA5698F6CBBCFBDDBC1200B /* HealthKitDataGenerator.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		66D3E3AC88A04EE1027A0E3B /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				85B91884B75A80D558AC1756 /* HealthKitConstants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		7076CF3897797FED226D78D1 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				25CAA12FBCBBFBA41E789C50 /* JsonHandlerProtocol.swift */,
+				7C3D9E7C39B46D2FD38247C4 /* JsonReader.swift */,
+				EE446B43FA7F751584960D9F /* JsonTokenizer.swift */,
+				38B825F2125DC22B409DDAD3 /* JsonWriter.swift */,
+				69F2BA0141EF94763C0D8E01 /* OutputStreams.swift */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		80A592E66E9B3D7C9A96D098 /* HealthKitDataGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				66D3E3AC88A04EE1027A0E3B /* Constants */,
+				66AA5A9D5687A626A760ED06 /* Core */,
+				3BDA48644CD6893EAD0AFC87 /* DataExport */,
+				F1BBA4B65B8BB9F9BC8A502F /* DataGeneration */,
+				F1FE0AC8BB2D1CD60640BA07 /* DataImport */,
+				7076CF3897797FED226D78D1 /* JSON */,
+				429EFDE99C2C44A1861CB940 /* LLM */,
+				B83486CDD1CA04E70292700D /* Utilities */,
+			);
+			path = HealthKitDataGenerator;
+			sourceTree = "<group>";
+		};
+		84EF16B4F4A404B985EAA6B9 /* Derived */ = {
+			isa = PBXGroup;
+			children = (
+				F91BF7C4DBA15F28CAE1D7DB /* InfoPlists */,
+			);
+			path = Derived;
+			sourceTree = "<group>";
+		};
+		B83486CDD1CA04E70292700D /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6CCF8697A4E0B6F63DCF5A8F /* AppLogger.swift */,
+				BE87573A743E4618E114E5DE /* DateExtensions.swift */,
+				31109EFAB26E5DAD048B3ADB /* FileNameUtil.swift */,
+				BF1E0E3A5BEACEE66A8A2E1E /* HealthKitStoreCleaner.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		DFB312C74D4A274FAEA7522E /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				80A592E66E9B3D7C9A96D098 /* HealthKitDataGenerator */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		E4E86361371D4FBE02B8809F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				05CC18DCA3B00EAB124BEC8F /* HealthKitDataGenerator.framework */,
+				B4E4AF2A0E018EB76E2D2F57 /* HealthKitDataGeneratorTests.xctest */,
+				B2B03D661FF0F5F384228C89 /* Logging.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1BBA4B65B8BB9F9BC8A502F /* DataGeneration */ = {
+			isa = PBXGroup;
+			children = (
+				15EE823FA0346A2ABE51EE87 /* HealthProfile.swift */,
+				39A97E0904942F7C032A096E /* SampleCreator.swift */,
+				82BD0A30C912660708E25027 /* SampleDataGenerator.swift */,
+				5B946A93CF3F4D8FC7AEF43D /* SampleGenerationConfig.swift */,
+			);
+			path = DataGeneration;
+			sourceTree = "<group>";
+		};
+		F1FE0AC8BB2D1CD60640BA07 /* DataImport */ = {
+			isa = PBXGroup;
+			children = (
+				479543FE74F92C5AD0AB8D53 /* HealthKitProfile.swift */,
+				F946463289AFCF963D847A8B /* HealthKitProfileImporter.swift */,
+				457E131230677DFB01ADEBED /* HealthKitProfileReader.swift */,
+			);
+			path = DataImport;
+			sourceTree = "<group>";
+		};
+		F91BF7C4DBA15F28CAE1D7DB /* InfoPlists */ = {
+			isa = PBXGroup;
+			children = (
+				895A77AEC7119D9248530D03 /* HealthKitDataGenerator-Info.plist */,
+				6CEDE9B5F81EBE08EE2D8AD2 /* HealthKitDataGeneratorTests-Info.plist */,
+			);
+			path = InfoPlists;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		490B9797747F8C975F894F05 /* HealthKitDataGenerator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 606B2EC4C232A4FD42BD84C1 /* Build configuration list for PBXNativeTarget "HealthKitDataGenerator" */;
+			buildPhases = (
+				24DF5AEA03E7A119657C4B0F /* Sources */,
+				269B8CDC5868B288CE87D2CC /* Resources */,
+				B32CA545D62BB08CE87D4A05 /* Frameworks */,
+				C50729EED47277F3A3DD88CD /* Embed Frameworks */,
+				1288D301E230DC33FB69D59B /* Dependencies */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HealthKitDataGenerator;
+			packageProductDependencies = (
+			);
+			productName = HealthKitDataGenerator;
+			productReference = 05CC18DCA3B00EAB124BEC8F /* HealthKitDataGenerator.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A0AC5DD4073791744E8C0EE7 /* HealthKitDataGeneratorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9B35C026B5D1E7936AA6E92 /* Build configuration list for PBXNativeTarget "HealthKitDataGeneratorTests" */;
+			buildPhases = (
+				0E0F6231949E786F3F55CB36 /* Sources */,
+				247247372F0BFE157956F0D3 /* Resources */,
+				203CEE1E83417246427761C0 /* Frameworks */,
+				48174224D46BC7FA2975563B /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				57D0BE911682F05F553259B7 /* PBXTargetDependency */,
+			);
+			name = HealthKitDataGeneratorTests;
+			packageProductDependencies = (
+			);
+			productName = HealthKitDataGeneratorTests;
+			productReference = B4E4AF2A0E018EB76E2D2F57 /* HealthKitDataGeneratorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A13F535155BC2A301789406B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 8EB42261F862791341EB4C0A /* Build configuration list for PBXProject "HealthKitDataGenerator" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 4C69B5FD70AB49C73284C88E;
+			productRefGroup = E4E86361371D4FBE02B8809F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				490B9797747F8C975F894F05 /* HealthKitDataGenerator */,
+				A0AC5DD4073791744E8C0EE7 /* HealthKitDataGeneratorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		247247372F0BFE157956F0D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		269B8CDC5868B288CE87D2CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0E0F6231949E786F3F55CB36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E56A56378A473DB7211BAEDA /* HealthKitDataGeneratorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		24DF5AEA03E7A119657C4B0F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3342952EDCE66715BEA13C41 /* HealthKitConstants.swift in Sources */,
+				333E56ABAF25F561164292C5 /* HealthKitDataGenerator.swift in Sources */,
+				6641E490F43EF768723C3EA7 /* ExportConfiguration.swift in Sources */,
+				3CD787FF428FC1F61A677044 /* ExportTargets.swift in Sources */,
+				A32CF4DDC59770998472046C /* HealthProfile.swift in Sources */,
+				D6824F067BC170945760E607 /* SampleCreator.swift in Sources */,
+				6CF30FC732E2822637EBF085 /* SampleDataGenerator.swift in Sources */,
+				7A98A36FF6116B743FBF7A9D /* SampleGenerationConfig.swift in Sources */,
+				808971C3CF2EA905082469B1 /* HealthKitProfile.swift in Sources */,
+				D48EA0782817E6D54798FC92 /* HealthKitProfileImporter.swift in Sources */,
+				EF63F83FC0169D69B74FD3D4 /* HealthKitProfileReader.swift in Sources */,
+				5E1780DAB32784D34713F93A /* JsonHandlerProtocol.swift in Sources */,
+				3A35BFDF557A4BE1A7F4B8FA /* JsonReader.swift in Sources */,
+				3A419ABC02833DD9189A7BA2 /* JsonTokenizer.swift in Sources */,
+				221BE375FEE3A04176D4E1AF /* JsonWriter.swift in Sources */,
+				39F23C3E16EFDD54E29E8D89 /* OutputStreams.swift in Sources */,
+				2F31298486CB81D544EA2100 /* AppleFoundationModelProvider.swift in Sources */,
+				1A962F4C2AAC092FF3E2C1F5 /* LLMManager.swift in Sources */,
+				B1746B3261ACF8FAED86DEC0 /* LLMProvider.swift in Sources */,
+				B2940C80EF90EE26569990D3 /* AppLogger.swift in Sources */,
+				05D72BD0BA65F784FCED2724 /* DateExtensions.swift in Sources */,
+				8523E5FC281B12F224C6036C /* FileNameUtil.swift in Sources */,
+				9950BC2FDFCAE14B5CAEA088 /* HealthKitStoreCleaner.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		57D0BE911682F05F553259B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HealthKitDataGenerator;
+			target = 490B9797747F8C975F894F05 /* HealthKitDataGenerator */;
+			targetProxy = 2286BD6B85B31140ABA4858F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		009B56E7B31161A838E86CCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+					"SWIFT_PACKAGE=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = (
+					"$(inherited)",
+					"-package-name",
+					HealthKitDataGenerator,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					SWIFT_PACKAGE,
+				);
+				SWIFT_SUPPRESS_WARNINGS = YES;
+				SWIFT_VERSION = 5.0.0;
+				USE_HEADERMAP = NO;
+			};
+			name = Debug;
+		};
+		0FD8EDBD66BAF9A50AA1144C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				INFOPLIST_FILE = "Derived/InfoPlists/HealthKitDataGeneratorTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = HealthKitDataGeneratorTests;
+				PRODUCT_NAME = HealthKitDataGeneratorTests;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2,3,4,6,7";
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Release;
+		};
+		13AC97C96829FE601DB4803A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				INFOPLIST_FILE = "Derived/InfoPlists/HealthKitDataGeneratorTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = HealthKitDataGeneratorTests;
+				PRODUCT_NAME = HealthKitDataGeneratorTests;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2,3,4,6,7";
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Debug;
+		};
+		15D2E6CB0DFE9A089E4DFCBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Derived/InfoPlists/HealthKitDataGenerator-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = HealthKitDataGenerator;
+				PRODUCT_NAME = HealthKitDataGenerator;
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2,3,4,6,7";
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Release;
+		};
+		440A13B11FDA44D9E785F405 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SWIFT_PACKAGE=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_SWIFT_FLAGS = (
+					"$(inherited)",
+					"-package-name",
+					HealthKitDataGenerator,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					SWIFT_PACKAGE,
+				);
+				SWIFT_SUPPRESS_WARNINGS = YES;
+				SWIFT_VERSION = 5.0.0;
+				USE_HEADERMAP = NO;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CD344BBD42AEB87A31525418 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Derived/InfoPlists/HealthKitDataGenerator-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = HealthKitDataGenerator;
+				PRODUCT_NAME = HealthKitDataGenerator;
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2,3,4,6,7";
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		606B2EC4C232A4FD42BD84C1 /* Build configuration list for PBXNativeTarget "HealthKitDataGenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD344BBD42AEB87A31525418 /* Debug */,
+				15D2E6CB0DFE9A089E4DFCBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8EB42261F862791341EB4C0A /* Build configuration list for PBXProject "HealthKitDataGenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				009B56E7B31161A838E86CCF /* Debug */,
+				440A13B11FDA44D9E785F405 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9B35C026B5D1E7936AA6E92 /* Build configuration list for PBXNativeTarget "HealthKitDataGeneratorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13AC97C96829FE601DB4803A /* Debug */,
+				0FD8EDBD66BAF9A50AA1144C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A13F535155BC2A301789406B /* Project object */;
+}

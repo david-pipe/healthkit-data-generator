@@ -1,4 +1,3 @@
-
 import Foundation
 import HealthKit
 import Logging
@@ -24,7 +23,7 @@ public class SampleDataGenerator {
         ])
         
         var result: [String: Any] = [:]
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var totalSamplesGenerated = 0
         var daysProcessed = 0
         
@@ -142,6 +141,116 @@ public class SampleDataGenerator {
             return generateRespiratoryRate(for: date, profile: profile, config: config)
         case .oxygenSaturation:
             return generateOxygenSaturation(for: date, profile: profile, config: config)
+        // Reproductive Health
+        case .menstrualFlow:
+            return generateMenstrualFlow(for: date, profile: profile, config: config)
+        case .intermenstrualBleeding:
+            return generateIntermenstrualBleeding(for: date, profile: profile, config: config)
+        case .cervicalMucusQuality:
+            return generateCervicalMucusQuality(for: date, profile: profile, config: config)
+        case .ovulationTestResult:
+            return generateOvulationTestResult(for: date, profile: profile, config: config)
+        case .pregnancyTestResult:
+            return generatePregnancyTestResult(for: date, profile: profile, config: config)
+        case .progesteroneTestResult:
+            return generateProgesteroneTestResult(for: date, profile: profile, config: config)
+        case .sexualActivity:
+            return generateSexualActivity(for: date, profile: profile, config: config)
+        case .contraceptive:
+            return generateContraceptive(for: date, profile: profile, config: config)
+        case .pregnancy:
+            return generatePregnancy(for: date, profile: profile, config: config)
+        case .lactation:
+            return generateLactation(for: date, profile: profile, config: config)
+        // Cycle Irregularities — READ-ONLY, computed by HealthKit. Cannot be written by apps.
+        case .infrequentMenstrualCycles,
+             .irregularMenstrualCycles,
+             .persistentIntermenstrualBleeding,
+             .prolongedMenstrualPeriods:
+            return []
+        // Symptoms
+        case .abdominalCramps:
+            return generateAbdominalCramps(for: date, profile: profile, config: config)
+        case .acne:
+            return generateAcne(for: date, profile: profile, config: config)
+        case .appetiteChanges:
+            return generateAppetiteChanges(for: date, profile: profile, config: config)
+        case .bladderIncontinence:
+            return generateBladderIncontinence(for: date, profile: profile, config: config)
+        case .bloating:
+            return generateBloating(for: date, profile: profile, config: config)
+        case .breastPain:
+            return generateBreastPain(for: date, profile: profile, config: config)
+        case .chills:
+            return generateChills(for: date, profile: profile, config: config)
+        case .constipation:
+            return generateConstipation(for: date, profile: profile, config: config)
+        case .diarrhea:
+            return generateDiarrhea(for: date, profile: profile, config: config)
+        case .dizziness:
+            return generateDizziness(for: date, profile: profile, config: config)
+        case .drySkin:
+            return generateDrySkin(for: date, profile: profile, config: config)
+        case .fatigue:
+            return generateFatigue(for: date, profile: profile, config: config)
+        case .hairLoss:
+            return generateHairLoss(for: date, profile: profile, config: config)
+        case .headache:
+            return generateHeadache(for: date, profile: profile, config: config)
+        case .hotFlashes:
+            return generateHotFlashes(for: date, profile: profile, config: config)
+        case .lowerBackPain:
+            return generateLowerBackPain(for: date, profile: profile, config: config)
+        case .memoryLapse:
+            return generateMemoryLapse(for: date, profile: profile, config: config)
+        case .moodChanges:
+            return generateMoodChanges(for: date, profile: profile, config: config)
+        case .nausea:
+            return generateNausea(for: date, profile: profile, config: config)
+        case .nightSweats:
+            return generateNightSweats(for: date, profile: profile, config: config)
+        case .pelvicPain:
+            return generatePelvicPain(for: date, profile: profile, config: config)
+        case .rapidPoundingOrFlutteringHeartbeat:
+            return generateRapidPoundingOrFlutteringHeartbeat(for: date, profile: profile, config: config)
+        case .runnyNose:
+            return generateRunnyNose(for: date, profile: profile, config: config)
+        case .sinusCongestion:
+            return generateSinusCongestion(for: date, profile: profile, config: config)
+        case .skippedHeartbeat:
+            return generateSkippedHeartbeat(for: date, profile: profile, config: config)
+        case .sleepChanges:
+            return generateSleepChanges(for: date, profile: profile, config: config)
+        case .soreThroat:
+            return generateSoreThroat(for: date, profile: profile, config: config)
+        case .vaginalDryness:
+            return generateVaginalDryness(for: date, profile: profile, config: config)
+        case .vomiting:
+            return generateVomiting(for: date, profile: profile, config: config)
+        case .bodyAndMuscleAche:
+            return generateBodyAndMuscleAche(for: date, profile: profile, config: config)
+        case .chestTightnessOrPain:
+            return generateChestTightnessOrPain(for: date, profile: profile, config: config)
+        case .coughing:
+            return generateCoughing(for: date, profile: profile, config: config)
+        case .fainting:
+            return generateFainting(for: date, profile: profile, config: config)
+        case .fever:
+            return generateFever(for: date, profile: profile, config: config)
+        case .heartburn:
+            return generateHeartburn(for: date, profile: profile, config: config)
+        case .lossOfSmell:
+            return generateLossOfSmell(for: date, profile: profile, config: config)
+        case .lossOfTaste:
+            return generateLossOfTaste(for: date, profile: profile, config: config)
+        case .shortnessOfBreath:
+            return generateShortnessOfBreath(for: date, profile: profile, config: config)
+        case .wheezing:
+            return generateWheezing(for: date, profile: profile, config: config)
+        case .bleedingAfterPregnancy:
+            return generateBleedingAfterPregnancy(for: date, profile: profile, config: config)
+        case .bleedingDuringPregnancy:
+            return generateBleedingDuringPregnancy(for: date, profile: profile, config: config)
         default:
             return [] // Not yet implemented
         }
@@ -154,7 +263,7 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
         // Generate steps throughout the day
@@ -186,7 +295,7 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
         // Generate resting heart rate samples throughout the day
@@ -222,7 +331,7 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         guard let morningTime = calendar.date(bySettingHour: 7, minute: 30, second: 0, of: date) else {
             return []
         }
@@ -243,7 +352,7 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
         // Calculate sleep duration based on quality
@@ -253,17 +362,13 @@ public class SampleDataGenerator {
         // Adjust sleep duration based on quality
         switch profile.sleepQuality {
         case .poor:
-            // Poor sleep: shorter duration, more fragmented
-            sleepDuration = baseSleepDuration * Double.random(in: 0.6...0.8) // 60-80% of normal
+            sleepDuration = baseSleepDuration * Double.random(in: 0.6...0.8)
         case .fair:
-            // Fair sleep: slightly reduced duration
-            sleepDuration = baseSleepDuration * Double.random(in: 0.8...0.9) // 80-90% of normal
+            sleepDuration = baseSleepDuration * Double.random(in: 0.8...0.9)
         case .good:
-            // Good sleep: normal duration
-            sleepDuration = baseSleepDuration * Double.random(in: 0.9...1.0) // 90-100% of normal
+            sleepDuration = baseSleepDuration * Double.random(in: 0.9...1.0)
         case .excellent:
-            // Excellent sleep: full duration
-            sleepDuration = baseSleepDuration * Double.random(in: 1.0...1.1) // 100-110% of normal
+            sleepDuration = baseSleepDuration * Double.random(in: 1.0...1.1)
         }
         
         // Adjust bedtime based on sleep quality
@@ -272,13 +377,10 @@ public class SampleDataGenerator {
         
         switch profile.sleepQuality {
         case .poor:
-            // Poor sleep: later bedtime, more irregular
-            bedtimeHour = (baseBedtimeHour + Int.random(in: 1...3)) % 24 // 1-3 hours later
+            bedtimeHour = (baseBedtimeHour + Int.random(in: 1...3)) % 24
         case .fair:
-            // Fair sleep: slightly later bedtime
-            bedtimeHour = (baseBedtimeHour + Int.random(in: 0...2)) % 24 // 0-2 hours later
+            bedtimeHour = (baseBedtimeHour + Int.random(in: 0...2)) % 24
         case .good, .excellent:
-            // Good sleep: normal bedtime
             bedtimeHour = baseBedtimeHour
         }
         
@@ -291,45 +393,36 @@ public class SampleDataGenerator {
             sleepStart = calendar.date(bySettingHour: bedtimeHour, minute: Int.random(in: 0...59), second: 0, of: previousDay)!
         }
         
-        // Add some variability to wake time based on quality
         let baseSleepEnd = sleepStart.addingTimeInterval(sleepDuration * 3600)
         let sleepEnd: Date
         
         switch profile.sleepQuality {
         case .poor:
-            // Poor sleep: earlier wake time, more variable
-            let wakeVariability = Double.random(in: -1.0...0.5) // 1 hour earlier to 30 min later
+            let wakeVariability = Double.random(in: -1.0...0.5)
             sleepEnd = baseSleepEnd.addingTimeInterval(wakeVariability * 3600)
         case .fair:
-            // Fair sleep: slightly earlier wake time
-            let wakeVariability = Double.random(in: -0.5...0.5) // 30 min earlier to 30 min later
+            let wakeVariability = Double.random(in: -0.5...0.5)
             sleepEnd = baseSleepEnd.addingTimeInterval(wakeVariability * 3600)
         case .good, .excellent:
-            // Good sleep: normal wake time
-            let wakeVariability = Double.random(in: -0.25...0.25) // 15 min earlier to 15 min later
+            let wakeVariability = Double.random(in: -0.25...0.25)
             sleepEnd = baseSleepEnd.addingTimeInterval(wakeVariability * 3600)
         }
         
-        // Generate sleep phases based on quality
         let deepSleepPercentage = Double.random(in: profile.sleepQuality.deepSleepPercentage)
         let deepSleepDuration = sleepDuration * deepSleepPercentage
         
-        // REM sleep varies significantly with quality
         let remPercentage = profile.sleepQuality == .poor ? 0.10...0.15 :
                            profile.sleepQuality == .fair ? 0.15...0.18 :
                            profile.sleepQuality == .good ? 0.18...0.22 : 0.20...0.25
         let remSleepDuration = sleepDuration * Double.random(in: remPercentage)
         
-        // Awake periods vary dramatically with quality
-        let awakePercentage = profile.sleepQuality == .poor ? 0.15...0.30 : 
+        let awakePercentage = profile.sleepQuality == .poor ? 0.15...0.30 :
                              profile.sleepQuality == .fair ? 0.08...0.15 :
                              profile.sleepQuality == .good ? 0.03...0.08 : 0.01...0.05
         let awakeDuration = sleepDuration * Double.random(in: awakePercentage)
         let lightSleepDuration = sleepDuration - deepSleepDuration - remSleepDuration - awakeDuration
         
-        // Generate realistic sleep sequence based on quality
         if profile.sleepQuality == .poor {
-            // Poor sleep: fragmented, lots of awake periods, minimal deep sleep
             generateFragmentedSleep(
                 sleepStart: sleepStart,
                 sleepEnd: sleepEnd,
@@ -340,7 +433,6 @@ public class SampleDataGenerator {
                 samples: &samples
             )
         } else {
-            // Good sleep: normal sequence with minimal interruptions
             generateNormalSleep(
                 sleepStart: sleepStart,
                 sleepEnd: sleepEnd,
@@ -367,35 +459,30 @@ public class SampleDataGenerator {
         samples: inout [[String: Any]]
     ) {
         var currentTime = sleepStart
-        let totalDuration = sleepEnd.timeIntervalSince(sleepStart) / 3600 // hours
-        
-        // Poor sleep: multiple short sleep periods with frequent awakenings
-        let sleepPeriods = Int.random(in: 3...6) // 3-6 fragmented sleep periods
+        let totalDuration = sleepEnd.timeIntervalSince(sleepStart) / 3600
+
+        let sleepPeriods = Int.random(in: 3...6)
         let awakePeriods = sleepPeriods - 1
-        
-        // Distribute sleep phases across periods
+
         let periodDuration = totalDuration / Double(sleepPeriods)
         let awakePeriodDuration = awakeDuration / Double(awakePeriods)
-        
+
         for i in 0..<sleepPeriods {
             let periodStart = currentTime
             let periodEnd = currentTime.addingTimeInterval(periodDuration * 3600)
-            
-            // Each sleep period has light sleep, some deep sleep, and REM
+
             let periodDeepSleep = deepSleepDuration / Double(sleepPeriods)
             let periodRemSleep = remSleepDuration / Double(sleepPeriods)
             let periodLightSleep = periodDuration - (periodDeepSleep + periodRemSleep)
-            
-            // Light sleep (most of the period)
+
             let lightEnd = periodStart.addingTimeInterval(periodLightSleep * 3600)
             samples.append([
                 "sdate": DateFormatter.iso8601.string(from: periodStart),
                 "edate": DateFormatter.iso8601.string(from: lightEnd),
                 "value": HKCategoryValueSleepAnalysis.asleepCore.rawValue
             ])
-            
-            // Some deep sleep (if any left)
-            if periodDeepSleep > 0.1 { // At least 6 minutes
+
+            if periodDeepSleep > 0.1 {
                 let deepEnd = lightEnd.addingTimeInterval(periodDeepSleep * 3600)
                 samples.append([
                     "sdate": DateFormatter.iso8601.string(from: lightEnd),
@@ -406,9 +493,8 @@ public class SampleDataGenerator {
             } else {
                 currentTime = lightEnd
             }
-            
-            // Some REM sleep (if any left)
-            if periodRemSleep > 0.1 { // At least 6 minutes
+
+            if periodRemSleep > 0.1 {
                 let remEnd = currentTime.addingTimeInterval(periodRemSleep * 3600)
                 samples.append([
                     "sdate": DateFormatter.iso8601.string(from: currentTime),
@@ -417,9 +503,9 @@ public class SampleDataGenerator {
                 ])
                 currentTime = remEnd
             }
-            
-            // Add awake period between sleep periods (except after last period)
-            if i < sleepPeriods - 1 && awakePeriodDuration > 0.05 { // At least 3 minutes
+
+            // Awake period between sleep segments
+            if i < awakePeriods {
                 let awakeEnd = currentTime.addingTimeInterval(awakePeriodDuration * 3600)
                 samples.append([
                     "sdate": DateFormatter.iso8601.string(from: currentTime),
@@ -430,7 +516,7 @@ public class SampleDataGenerator {
             }
         }
     }
-    
+
     private static func generateNormalSleep(
         sleepStart: Date,
         sleepEnd: Date,
@@ -441,54 +527,49 @@ public class SampleDataGenerator {
         samples: inout [[String: Any]]
     ) {
         var currentTime = sleepStart
-        
-        // Normal sleep: sequential phases with minimal interruptions
-        // Light sleep phase 1
-        let lightPhase1End = currentTime.addingTimeInterval(lightSleepDuration * 0.4 * 3600)
+
+        // Initial light sleep
+        let initialLightDuration = lightSleepDuration * 0.3
+        let firstLightEnd = currentTime.addingTimeInterval(initialLightDuration * 3600)
         samples.append([
             "sdate": DateFormatter.iso8601.string(from: currentTime),
-            "edate": DateFormatter.iso8601.string(from: lightPhase1End),
+            "edate": DateFormatter.iso8601.string(from: firstLightEnd),
             "value": HKCategoryValueSleepAnalysis.asleepCore.rawValue
         ])
-        currentTime = lightPhase1End
-        
-        // Deep sleep phase (early in the night)
-        let deepPhaseEnd = currentTime.addingTimeInterval(deepSleepDuration * 3600)
-        samples.append([
-            "sdate": DateFormatter.iso8601.string(from: currentTime),
-            "edate": DateFormatter.iso8601.string(from: deepPhaseEnd),
-            "value": HKCategoryValueSleepAnalysis.asleepDeep.rawValue
-        ])
-        currentTime = deepPhaseEnd
-        
-        // REM sleep phase (later in the night)
-        let remPhaseEnd = currentTime.addingTimeInterval(remSleepDuration * 3600)
-        samples.append([
-            "sdate": DateFormatter.iso8601.string(from: currentTime),
-            "edate": DateFormatter.iso8601.string(from: remPhaseEnd),
-            "value": HKCategoryValueSleepAnalysis.asleepREM.rawValue
-        ])
-        currentTime = remPhaseEnd
-        
-        // Add minimal awake periods if any
-        if awakeDuration > 0.05 { // At least 3 minutes
-            let awakePeriods = Int.random(in: 1...2)
-            let awakePeriodDuration = awakeDuration / Double(awakePeriods)
-            
-            for _ in 0..<awakePeriods {
-                let awakeStart = currentTime.addingTimeInterval(Double.random(in: 0...0.5) * 3600)
-                let awakeEnd = awakeStart.addingTimeInterval(awakePeriodDuration * 3600)
-                
-                if awakeEnd <= sleepEnd {
-                    samples.append([
-                        "sdate": DateFormatter.iso8601.string(from: awakeStart),
-                        "edate": DateFormatter.iso8601.string(from: awakeEnd),
-                        "value": HKCategoryValueSleepAnalysis.awake.rawValue
-                    ])
-                }
-            }
+        currentTime = firstLightEnd
+
+        // Deep sleep
+        if deepSleepDuration > 0 {
+            let deepEnd = currentTime.addingTimeInterval(deepSleepDuration * 3600)
+            samples.append([
+                "sdate": DateFormatter.iso8601.string(from: currentTime),
+                "edate": DateFormatter.iso8601.string(from: deepEnd),
+                "value": HKCategoryValueSleepAnalysis.asleepDeep.rawValue
+            ])
+            currentTime = deepEnd
         }
-        
+
+        // Middle light sleep
+        let middleLightDuration = lightSleepDuration * 0.4
+        let middleLightEnd = currentTime.addingTimeInterval(middleLightDuration * 3600)
+        samples.append([
+            "sdate": DateFormatter.iso8601.string(from: currentTime),
+            "edate": DateFormatter.iso8601.string(from: middleLightEnd),
+            "value": HKCategoryValueSleepAnalysis.asleepCore.rawValue
+        ])
+        currentTime = middleLightEnd
+
+        // REM sleep
+        if remSleepDuration > 0 {
+            let remEnd = currentTime.addingTimeInterval(remSleepDuration * 3600)
+            samples.append([
+                "sdate": DateFormatter.iso8601.string(from: currentTime),
+                "edate": DateFormatter.iso8601.string(from: remEnd),
+                "value": HKCategoryValueSleepAnalysis.asleepREM.rawValue
+            ])
+            currentTime = remEnd
+        }
+
         // Final light sleep phase
         samples.append([
             "sdate": DateFormatter.iso8601.string(from: currentTime),
@@ -504,7 +585,7 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
         // Determine if there should be a workout today
@@ -593,7 +674,7 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
         let targetEnergy = Int.random(in: profile.activeEnergyRange)
@@ -622,14 +703,12 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
-        // Basal metabolic rate (roughly 1400-1800 kcal/day for average adult)
         let baseBMR = 1600.0
         let dailyBasal = Int(baseBMR * profile.basalEnergyMultiplier)
         
-        // Generate hourly basal energy
         for hour in 0..<24 {
             guard let sampleTime = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: date) else {
                 continue
@@ -654,12 +733,11 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         guard let morningTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: date) else {
             return []
         }
         
-        // Blood pressure correlates with stress and fitness
         let systolic = profile.stressLevel == .veryHigh ? Int.random(in: 130...145) : Int.random(in: 110...125)
         let diastolic = profile.stressLevel == .veryHigh ? Int.random(in: 85...95) : Int.random(in: 70...80)
         
@@ -676,12 +754,11 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         guard let morningTime = calendar.date(bySettingHour: 7, minute: 0, second: 0, of: date) else {
             return []
         }
         
-        // Stable body mass with small daily variation
         let baseMass = 70.0 // kg
         let variation = Double.random(in: -0.5...0.5)
         
@@ -697,10 +774,9 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         var samples: [[String: Any]] = []
         
-        // Water intake based on hydration level
         let dailyWaterML: ClosedRange<Double> = {
             switch profile.hydrationLevel {
             case .low: return 1000...1500
@@ -735,14 +811,11 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
+        let calendar = Calendar.newZealand
         
-        // More mindfulness for stressed individuals
         let shouldMeditate = profile.stressLevel == .veryHigh ? Bool.random() : (Int.random(in: 0...100) < 30)
         
-        guard shouldMeditate else {
-            return []
-        }
+        guard shouldMeditate else { return [] }
         
         let startHour = Int.random(in: 7...9)
         guard let sessionStart = calendar.date(bySettingHour: startHour, minute: 0, second: 0, of: date) else {
@@ -764,18 +837,10 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
-        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else {
-            return []
-        }
-        
+        let calendar = Calendar.newZealand
+        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else { return [] }
         let sugar = profile.dietaryPattern == .keto ? Double.random(in: 10...30) : Double.random(in: 40...80)
-        
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: mealTime),
-            "value": sugar,
-            "unit": "g"
-        ]]
+        return [["sdate": DateFormatter.iso8601.string(from: mealTime), "value": sugar, "unit": "g"]]
     }
     
     private static func generateDietaryProtein(
@@ -783,18 +848,10 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
-        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else {
-            return []
-        }
-        
+        let calendar = Calendar.newZealand
+        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else { return [] }
         let protein = profile.dietaryPattern == .highProtein ? Double.random(in: 120...180) : Double.random(in: 60...100)
-        
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: mealTime),
-            "value": protein,
-            "unit": "g"
-        ]]
+        return [["sdate": DateFormatter.iso8601.string(from: mealTime), "value": protein, "unit": "g"]]
     }
     
     private static func generateDietaryCarbs(
@@ -802,18 +859,10 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
-        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else {
-            return []
-        }
-        
+        let calendar = Calendar.newZealand
+        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else { return [] }
         let carbs = profile.dietaryPattern == .keto ? Double.random(in: 20...50) : Double.random(in: 200...350)
-        
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: mealTime),
-            "value": carbs,
-            "unit": "g"
-        ]]
+        return [["sdate": DateFormatter.iso8601.string(from: mealTime), "value": carbs, "unit": "g"]]
     }
     
     private static func generateDietaryFat(
@@ -821,18 +870,10 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
-        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else {
-            return []
-        }
-        
+        let calendar = Calendar.newZealand
+        guard let mealTime = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date) else { return [] }
         let fat = profile.dietaryPattern == .keto ? Double.random(in: 120...180) : Double.random(in: 50...90)
-        
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: mealTime),
-            "value": fat,
-            "unit": "g"
-        ]]
+        return [["sdate": DateFormatter.iso8601.string(from: mealTime), "value": fat, "unit": "g"]]
     }
     
     private static func generateRespiratoryRate(
@@ -840,18 +881,9 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
-        guard let morningTime = calendar.date(bySettingHour: 7, minute: 30, second: 0, of: date) else {
-            return []
-        }
-        
-        let respiratoryRate = Double.random(in: 12...20)
-        
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: morningTime),
-            "value": respiratoryRate,
-            "unit": "count/min"
-        ]]
+        let calendar = Calendar.newZealand
+        guard let morningTime = calendar.date(bySettingHour: 7, minute: 30, second: 0, of: date) else { return [] }
+        return [["sdate": DateFormatter.iso8601.string(from: morningTime), "value": Double.random(in: 12...20), "unit": "count/min"]]
     }
     
     private static func generateOxygenSaturation(
@@ -859,20 +891,767 @@ public class SampleDataGenerator {
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        let calendar = Calendar.current
-        guard let morningTime = calendar.date(bySettingHour: 7, minute: 30, second: 0, of: date) else {
-            return []
-        }
-        
-        let oxygenSat = Double.random(in: 95...100)
-        
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: morningTime),
-            "value": oxygenSat,
-            "unit": "%"
-        ]]
+        let calendar = Calendar.newZealand
+        guard let morningTime = calendar.date(bySettingHour: 7, minute: 30, second: 0, of: date) else { return [] }
+        return [["sdate": DateFormatter.iso8601.string(from: morningTime), "value": Double.random(in: 95...100), "unit": "%"]]
     }
     
+    // MARK: - Reproductive Health Generation
+    
+    /// Returns which day of the menstrual cycle this date falls on (1–28).
+    /// Uses a fixed reference date so the cycle is consistent across a generation run.
+    private static func menstrualCycleDay(for date: Date) -> Int {
+        // Reference: cycle day 1 = Jan 1 2024 (arbitrary anchor, consistent within a run)
+        let reference = Calendar.newZealand.date(from: DateComponents(year: 2024, month: 1, day: 1))!
+        let daysSinceReference = Calendar.newZealand.dateComponents([.day], from: reference, to: date).day ?? 0
+        // Typical cycle length of 28 days; keep positive
+        return (((daysSinceReference % 28) + 28) % 28) + 1
+    }
+
+    /// Menstrual flow: generates a single all-day sample during days 1–5 of the cycle.
+    /// Values map to HKCategoryValueMenstrualFlow: light=2, medium=3, heavy=4.
+    private static func generateMenstrualFlow(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        // Only generate during menstruation (days 1–5)
+        guard cycleDay <= 5 else { return [] }
+
+        // Flow intensity follows a realistic bell curve: light → heavy → medium → light → light
+        // HKCategoryValueMenstrualFlow raw values: light=1, medium=2, heavy=3
+        let flowValue: Int
+        switch cycleDay {
+        case 1: flowValue = 2 // medium — flow building
+        case 2: flowValue = 3 // heavy — peak flow
+        case 3: flowValue = 2 // medium
+        case 4: flowValue = 1 // light
+        case 5: flowValue = 1 // light — tapering off
+        default: flowValue = 1 // light (shouldn't reach here)
+        }
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": flowValue,
+            // isCycleStart is a flat top-level field rather than nested inside metaData,
+            // because nested dicts don't survive the custom JSON tokenizer pipeline intact.
+            // SampleCreator reads this and injects HKMetadataKeyMenstrualCycleStart directly.
+            "isCycleStart": (cycleDay == 1)
+        ]]
+    }
+
+    /// Intermenstrual bleeding: mid-cycle spotting around ovulation (day 14), low probability.
+    /// Value maps to HKCategoryValue.notApplicable (0) — presence is the data point.
+    private static func generateIntermenstrualBleeding(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        // Mid-cycle spotting is possible around ovulation (days 13–15), ~15% chance
+        guard (13...15).contains(cycleDay), Double.random(in: 0...1) < 0.15 else { return [] }
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": 0 // HKCategoryValue.notApplicable
+        ]]
+    }
+
+    /// Cervical mucus quality: varies predictably across the cycle.
+    /// HKCategoryValueCervicalMucusQuality: dry=1, sticky=2, creamy=3, watery=4, eggWhite=5
+    private static func generateCervicalMucusQuality(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        // No mucus observation during menstruation
+        guard cycleDay > 5 else { return [] }
+
+        let mucusValue: Int
+        switch cycleDay {
+        case 6...8:   mucusValue = 1 // dry — post-period
+        case 9...10:  mucusValue = 2 // sticky
+        case 11...12: mucusValue = 3 // creamy — approaching fertile window
+        case 13:      mucusValue = 4 // watery
+        case 14:      mucusValue = 5 // egg white — peak fertility / ovulation
+        case 15:      mucusValue = 4 // watery — just post-ovulation
+        case 16...18: mucusValue = 2 // sticky — luteal phase begins
+        default:      mucusValue = 1 // dry — luteal phase
+        }
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": mucusValue
+        ]]
+    }
+
+    /// Ovulation test result: LH surge peaks at day 14.
+    /// HKCategoryValueOvulationTestResult: negative=1, luteinizingHormoneSurge=2, indeterminate=3, estrogenSurge=4
+    private static func generateOvulationTestResult(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        // Only generate a test result during the fertile window (days 10–17)
+        guard (10...17).contains(cycleDay) else { return [] }
+
+        let testValue: Int
+        switch cycleDay {
+        case 12:    testValue = 4 // estrogenSurge — rises first (iOS 15+)
+        case 13:    testValue = 3 // indeterminate — LH building
+        case 14:    testValue = 2 // luteinizingHormoneSurge — peak
+        case 15:    testValue = 2 // luteinizingHormoneSurge — still elevated
+        default:    testValue = 1 // negative
+        }
+
+        guard let noonTime = calendar.date(bySettingHour: 10, minute: 0, second: 0, of: date) else { return [] }
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: noonTime),
+            "value": testValue
+        ]]
+    }
+
+    /// Progesterone test result: positive during the luteal phase (days 18–26).
+    /// HKCategoryValueProgesteroneTestResult: negative=1, positive=2, indeterminate=3 (iOS 15+)
+    private static func generateProgesteroneTestResult(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        // Only generate a test result during the luteal phase (days 18–26)
+        guard (18...26).contains(cycleDay) else { return [] }
+
+        // Positive during mid-luteal phase, indeterminate at edges
+        let testValue: Int
+        switch cycleDay {
+        case 18, 26: testValue = 3  // indeterminate — transitional
+        default:     testValue = 2  // positive — confirmed luteal progesterone rise
+        }
+
+        guard let morningTime = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: date) else { return [] }
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: morningTime),
+            "value": testValue
+        ]]
+    }
+
+    /// Pregnancy test result: negative in a normal cycle simulation.
+    /// HKCategoryValuePregnancyTestResult: negative=1, positive=2, indeterminate=3 (iOS 15+)
+    private static func generatePregnancyTestResult(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        // Tests are typically taken around expected period (day 28 / day 1)
+        guard cycleDay == 28 || cycleDay == 1 else { return [] }
+
+        // 85% chance of testing; always negative in a standard cycle simulation
+        guard Double.random(in: 0...1) < 0.85 else { return [] }
+
+        guard let morningTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: date) else { return [] }
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: morningTime),
+            "value": 1 // negative
+        ]]
+    }
+
+    /// Sexual activity: random occurrence, ~25% of days.
+    /// Value is HKCategoryValue.notApplicable (0) — presence is the data point.
+    private static func generateSexualActivity(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+
+        guard Double.random(in: 0...1) < 0.25 else { return [] }
+
+        let hour = [21, 22, 23, 7, 8].randomElement()!
+        guard let activityTime = calendar.date(bySettingHour: hour, minute: Int.random(in: 0...30), second: 0, of: date) else {
+            return []
+        }
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: activityTime),
+            "value": 0 // HKCategoryValue.notApplicable
+        ]]
+    }
+
+    /// Contraceptive: one entry per day representing ongoing use.
+    /// HKCategoryValueContraceptive: unspecified=1, implant=2, injection=3, IUD=4,
+    ///                               intravaginalRing=5, oral=6, patch=7 (iOS 14.3+)
+    private static func generateContraceptive(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+
+        // 60% of generated profiles use contraception
+        guard Double.random(in: 0...1) < 0.60 else { return [] }
+
+        // Oral pill is the most common — fixed per-profile using a stable hash
+        // so the same profile always uses the same method across days
+        let methodValue = 6 // oral — could be varied per-profile if desired
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": methodValue
+        ]]
+    }
+
+    /// Pregnancy state: a single all-day category sample.
+    /// Not generated in a standard cycle simulation (returns empty).
+    /// Value is HKCategoryValue.notApplicable (0) — presence indicates pregnant state.
+    private static func generatePregnancy(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        // Pregnancy is a long-duration state that should be configured explicitly
+        // via customOverrides rather than generated automatically in a standard cycle.
+        return []
+    }
+
+    /// Lactation state: a single all-day category sample.
+    /// Not generated in a standard cycle simulation (returns empty).
+    /// Value is HKCategoryValue.notApplicable (0) — presence indicates lactating state.
+    private static func generateLactation(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        // Like pregnancy, lactation is a persistent state better expressed
+        // via customOverrides for the desired date range.
+        return []
+    }
+
+    /// Bleeding after pregnancy: a persistent state configured via customOverrides.
+    private static func generateBleedingAfterPregnancy(
+        for date: Date, profile: HealthProfile, config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        return []
+    }
+
+    /// Bleeding during pregnancy: a persistent state configured via customOverrides.
+    private static func generateBleedingDuringPregnancy(
+        for date: Date, profile: HealthProfile, config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        return []
+    }
+
+    // MARK: - Cycle Irregularity Generation
+
+    /// Infrequent menstrual cycles (cycle length > 35 days).
+    /// Represented as a single notApplicable (0) sample at the start of a "late" period.
+    /// Only emitted ~20% of the time on cycle day 1 (simulating occasional long cycles).
+    private static func generateInfrequentMenstrualCycles(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        guard cycleDay == 1, Double.random(in: 0...1) < 0.20 else { return [] }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": 0]]
+    }
+
+    /// Irregular menstrual cycles (variable cycle length).
+    /// Emitted ~30% of the time on cycle day 1. More likely for the stressed profile.
+    private static func generateIrregularMenstrualCycles(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        let probability: Double = profile.stressLevel == .veryHigh ? 0.45 : 0.20
+        guard cycleDay == 1, Double.random(in: 0...1) < probability else { return [] }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": 0]]
+    }
+
+    /// Persistent intermenstrual bleeding (ongoing spotting outside the normal period).
+    /// Generated on days outside menstruation with low probability.
+    private static func generatePersistentIntermenstrualBleeding(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        // Not generated during normal menstruation (days 1–5) or normal spotting window (13–15)
+        guard !(1...5).contains(cycleDay), !(13...15).contains(cycleDay) else { return [] }
+        guard Double.random(in: 0...1) < 0.08 else { return [] }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": 0]]
+    }
+
+    /// Prolonged menstrual periods (period lasting more than 7 days).
+    /// Generated on days 6–8 of the cycle at moderate probability.
+    private static func generateProlongedMenstrualPeriods(
+        for date: Date,
+        profile: HealthProfile,
+        config: SampleGenerationConfig
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        guard (6...8).contains(cycleDay), Double.random(in: 0...1) < 0.30 else { return [] }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": 0]]
+    }
+
+    // MARK: - Symptom Generation
+
+    /// Shared symptom sample builder.
+    ///
+    /// Each `PhaseConfig` describes a cycle-day window with an associated probability and
+    /// HKCategoryValueSeverity range (notPresent=0, mild=1, moderate=2, severe=3).
+    /// `baseProbability` covers days outside all defined phases.
+    /// The stress level of the profile scales all probabilities upward.
+    private struct PhaseConfig {
+        let days: ClosedRange<Int>
+        let probability: Double
+        let severityRange: ClosedRange<Int>
+    }
+
+    private static func generateSymptomSample(
+        for date: Date,
+        profile: HealthProfile,
+        phases: [PhaseConfig],
+        baseProbability: Double = 0.0,
+        baseSeverityRange: ClosedRange<Int> = 1...2
+    ) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+
+        var probability = baseProbability
+        var severityRange = baseSeverityRange
+
+        for phase in phases {
+            if phase.days.contains(cycleDay) {
+                probability = max(probability, phase.probability)
+                severityRange = phase.severityRange
+                break
+            }
+        }
+
+        // Stress amplifies symptom likelihood
+        let stressMultiplier: Double
+        switch profile.stressLevel {
+        case .veryHigh: stressMultiplier = 1.6
+        case .high:     stressMultiplier = 1.3
+        case .moderate: stressMultiplier = 1.0
+        case .low:      stressMultiplier = 0.65
+        }
+
+        guard Double.random(in: 0...1) < min(1.0, probability * stressMultiplier) else { return [] }
+
+        // Clamp to valid HKCategoryValueSeverity range.
+        // notPresent=1, mild=2, moderate=3, severe=4 — never emit 0 (notApplicable).
+        // Since we only create a sample when a symptom is present, floor at mild (2).
+        let clampedRange = max(2, severityRange.lowerBound)...min(4, severityRange.upperBound)
+        let severity = Int.random(in: clampedRange)
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": severity]]
+    }
+
+    // MARK: Symptom Generators
+
+    /// Abdominal cramps: peak during menstruation (days 1–5) and premenstrual phase (22–28).
+    private static func generateAbdominalCramps(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...3,   probability: 0.75, severityRange: 2...3),
+            PhaseConfig(days: 4...5,   probability: 0.55, severityRange: 2...3),
+            PhaseConfig(days: 22...28, probability: 0.35, severityRange: 2...3)
+        ])
+    }
+
+    /// Acne: elevated during late luteal phase (days 20–28) due to hormonal shifts.
+    private static func generateAcne(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 20...28, probability: 0.40, severityRange: 2...3),
+            PhaseConfig(days: 1...5,   probability: 0.25, severityRange: 2...2)
+        ])
+    }
+
+    /// Premenstrual cravings and post-ovulation fluctuations.
+    /// Appetite changes: uses HKCategoryValueAppetiteChanges, NOT severity.
+    /// noChange=1, decreased=2, increased=3. Premenstrual cravings (increased) dominate days 20–28.
+    private static func generateAppetiteChanges(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        let phases: [(days: ClosedRange<Int>, probability: Double)] = [
+            (20...28, 0.45),
+            (1...3,   0.25)
+        ]
+        var probability = 0.0
+        for phase in phases {
+            if phase.days.contains(cycleDay) { probability = phase.probability; break }
+        }
+        let stressMultiplier: Double
+        switch profile.stressLevel {
+        case .veryHigh: stressMultiplier = 1.6
+        case .high:     stressMultiplier = 1.3
+        case .moderate: stressMultiplier = 1.0
+        case .low:      stressMultiplier = 0.65
+        }
+        guard Double.random(in: 0...1) < min(1.0, probability * stressMultiplier) else { return [] }
+        // HKCategoryValueAppetiteChanges: noChange=1, decreased=2, increased=3
+        // Luteal phase (20–28) skews toward increased; menstruation toward decreased.
+        let value: Int
+        if (20...28).contains(cycleDay) {
+            value = [1, 2, 3, 3].randomElement()! // increased most likely
+        } else if (1...3).contains(cycleDay) {
+            value = [1, 2, 2, 3].randomElement()! // decreased most likely
+        } else {
+            value = [1, 2, 3].randomElement()!
+        }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": value]]
+    }
+
+    /// Bladder incontinence: low baseline; slightly elevated premenstrually.
+    private static func generateBladderIncontinence(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 22...28, probability: 0.12, severityRange: 2...2)
+        ], baseProbability: 0.05)
+    }
+
+    /// Bloating: strongest premenstrually; mild around ovulation.
+    private static func generateBloating(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 22...28, probability: 0.55, severityRange: 2...3),
+            PhaseConfig(days: 1...3,   probability: 0.35, severityRange: 2...3),
+            PhaseConfig(days: 13...15, probability: 0.20, severityRange: 2...2)
+        ])
+    }
+
+    /// Breast pain (mastalgia): classic premenstrual symptom, peaks days 18–28.
+    private static func generateBreastPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 18...28, probability: 0.45, severityRange: 2...3),
+            PhaseConfig(days: 1...5,   probability: 0.20, severityRange: 2...2)
+        ])
+    }
+
+    /// Chills: low baseline; elevated during menstruation.
+    private static func generateChills(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...3, probability: 0.20, severityRange: 2...2)
+        ], baseProbability: 0.04)
+    }
+
+    /// Constipation: progesterone-driven; most common in the luteal phase (days 16–28).
+    private static func generateConstipation(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 16...28, probability: 0.25, severityRange: 2...3)
+        ], baseProbability: 0.05)
+    }
+
+    /// Diarrhea: prostaglandin-driven; peak at onset of menstruation (days 1–3).
+    private static func generateDiarrhea(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...3, probability: 0.30, severityRange: 2...3)
+        ], baseProbability: 0.03)
+    }
+
+    /// Dizziness: mild baseline; slightly elevated during heavy flow (days 1–2).
+    private static func generateDizziness(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...2, probability: 0.20, severityRange: 2...2)
+        ], baseProbability: 0.05)
+    }
+
+    /// Dry skin: linked to oestrogen drop late in cycle; low but persistent baseline.
+    private static func generateDrySkin(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 20...28, probability: 0.20, severityRange: 2...2)
+        ], baseProbability: 0.08)
+    }
+
+    /// Fatigue: elevated during menstruation and premenstrual phase; stressed profile amplifies.
+    private static func generateFatigue(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...5,   probability: 0.60, severityRange: 2...3),
+            PhaseConfig(days: 22...28, probability: 0.45, severityRange: 2...3)
+        ], baseProbability: 0.10)
+    }
+
+    /// Hair loss: chronic low-level symptom; slightly elevated post-menstruation.
+    private static func generateHairLoss(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 6...12, probability: 0.12, severityRange: 2...2)
+        ], baseProbability: 0.05)
+    }
+
+    /// Headache: premenstrual oestrogen drop causes tension headaches; stress amplifies.
+    private static func generateHeadache(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 22...28, probability: 0.40, severityRange: 2...3),
+            PhaseConfig(days: 1...3,   probability: 0.30, severityRange: 2...3)
+        ], baseProbability: 0.06)
+    }
+
+    /// Hot flashes: driven by oestrogen fluctuations late in the luteal phase.
+    private static func generateHotFlashes(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 20...28, probability: 0.25, severityRange: 2...3)
+        ], baseProbability: 0.04)
+    }
+
+    /// Lower back pain: peak during menstruation; mild premenstrual presence.
+    private static func generateLowerBackPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...4,   probability: 0.60, severityRange: 2...3),
+            PhaseConfig(days: 22...28, probability: 0.30, severityRange: 2...3)
+        ])
+    }
+
+    /// Memory lapse: linked to hormonal brain-fog, especially late-luteal and stressed profiles.
+    private static func generateMemoryLapse(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 22...28, probability: 0.22, severityRange: 2...3)
+        ], baseProbability: 0.06)
+    }
+
+    /// PMS/PMDD spectrum; strong premenstrual signal, eases after period starts.
+    /// Mood changes: uses HKCategoryValuePresence, NOT severity.
+    /// HKCategoryValuePresence: present=0, notPresent=1. We only emit a sample when present.
+    /// Strong premenstrual signal, eases after period starts.
+    private static func generateMoodChanges(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        var probability = 0.0
+        if (20...28).contains(cycleDay)  { probability = 0.55 }
+        else if (1...3).contains(cycleDay) { probability = 0.30 }
+        let stressMultiplier: Double
+        switch profile.stressLevel {
+        case .veryHigh: stressMultiplier = 1.6
+        case .high:     stressMultiplier = 1.3
+        case .moderate: stressMultiplier = 1.0
+        case .low:      stressMultiplier = 0.65
+        }
+        guard Double.random(in: 0...1) < min(1.0, probability * stressMultiplier) else { return [] }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": 0]] // HKCategoryValuePresence.present = 0
+    }
+
+    /// Nausea: common at onset of menstruation due to prostaglandins; baseline for other days.
+    private static func generateNausea(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...3,   probability: 0.35, severityRange: 2...3),
+            PhaseConfig(days: 22...28, probability: 0.15, severityRange: 2...2)
+        ], baseProbability: 0.03)
+    }
+
+    /// Night sweats: hormonally driven; primarily premenstrual and stress-related.
+    private static func generateNightSweats(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 20...28, probability: 0.22, severityRange: 2...3)
+        ], baseProbability: 0.05)
+    }
+
+    /// Pelvic pain: menstrual cramping (days 1–5) and mittelschmerz around ovulation (13–15).
+    private static func generatePelvicPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...4,   probability: 0.60, severityRange: 2...3),
+            PhaseConfig(days: 13...15, probability: 0.25, severityRange: 2...2),
+            PhaseConfig(days: 22...28, probability: 0.20, severityRange: 2...2)
+        ])
+    }
+
+    /// Rapid, pounding, or fluttering heartbeat: low baseline; slightly elevated premenstrually.
+    private static func generateRapidPoundingOrFlutteringHeartbeat(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 22...28, probability: 0.12, severityRange: 2...2)
+        ], baseProbability: 0.04)
+    }
+
+    /// Runny nose: non-cyclic; low constant probability, stress-independent.
+    private static func generateRunnyNose(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.06)
+    }
+
+    /// Sinus congestion: non-cyclic; low constant probability.
+    private static func generateSinusCongestion(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.06)
+    }
+
+    /// Skipped heartbeat: very low probability; independent of cycle phase.
+    private static func generateSkippedHeartbeat(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.03)
+    }
+
+    /// Sleep changes: uses HKCategoryValuePresence, NOT severity.
+    /// HKCategoryValuePresence: present=0, notPresent=1. We only emit a sample when present.
+    /// Elevated premenstrually and during menstruation; stress-driven otherwise.
+    private static func generateSleepChanges(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        let calendar = Calendar.newZealand
+        let cycleDay = menstrualCycleDay(for: date)
+        var probability = 0.08 // baseline
+        if (20...28).contains(cycleDay)  { probability = 0.35 }
+        else if (1...5).contains(cycleDay) { probability = 0.25 }
+        let stressMultiplier: Double
+        switch profile.stressLevel {
+        case .veryHigh: stressMultiplier = 1.6
+        case .high:     stressMultiplier = 1.3
+        case .moderate: stressMultiplier = 1.0
+        case .low:      stressMultiplier = 0.65
+        }
+        guard Double.random(in: 0...1) < min(1.0, probability * stressMultiplier) else { return [] }
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [["sdate": DateFormatter.iso8601.string(from: dayStart),
+                 "edate": DateFormatter.iso8601.string(from: dayEnd),
+                 "value": 0]] // HKCategoryValuePresence.present = 0
+    }
+
+    /// Sore throat: non-cyclic; low constant probability.
+    private static func generateSoreThroat(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.05)
+    }
+
+    /// Vaginal dryness: low oestrogen during luteal phase; elevated days 18–28.
+    private static func generateVaginalDryness(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 18...28, probability: 0.20, severityRange: 2...3)
+        ], baseProbability: 0.05)
+    }
+
+    /// Vomiting: rare; occurs at peak prostaglandin surge (days 1–2).
+    private static func generateVomiting(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...2, probability: 0.12, severityRange: 2...3)
+        ], baseProbability: 0.02)
+    }
+
+    /// Body and muscle ache: mild cyclic pattern during menstruation; low baseline.
+    private static func generateBodyAndMuscleAche(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 1...5, probability: 0.35, severityRange: 2...3),
+            PhaseConfig(days: 22...28, probability: 0.15, severityRange: 2...2)
+        ], baseProbability: 0.05)
+    }
+
+    /// Chest tightness or pain: non-cyclic; rare.
+    private static func generateChestTightnessOrPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.03)
+    }
+
+    /// Coughing: non-cyclic; low probability.
+    private static func generateCoughing(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.05)
+    }
+
+    /// Fainting: very rare; non-cyclic.
+    private static func generateFainting(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.01)
+    }
+
+    /// Fever: non-cyclic; very low probability.
+    private static func generateFever(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.02)
+    }
+
+    /// Heartburn: progesterone relaxes lower oesophageal sphincter; elevated in luteal phase.
+    private static func generateHeartburn(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [
+            PhaseConfig(days: 16...28, probability: 0.20, severityRange: 2...3)
+        ], baseProbability: 0.04)
+    }
+
+    /// Loss of smell: non-cyclic; very low probability.
+    private static func generateLossOfSmell(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.02)
+    }
+
+    /// Loss of taste: non-cyclic; very low probability.
+    private static func generateLossOfTaste(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.02)
+    }
+
+    /// Shortness of breath: mild; non-cyclic.
+    private static func generateShortnessOfBreath(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.04)
+    }
+
+    /// Wheezing: non-cyclic; low probability.
+    private static func generateWheezing(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
+        generateSymptomSample(for: date, profile: profile, phases: [],
+                              baseProbability: 0.04)
+    }
+
     // MARK: - Helper Methods
     
     private static func workoutTypeToHKIdentifier(_ type: WorkoutType) -> Int {
@@ -891,6 +1670,25 @@ public class SampleDataGenerator {
     }
 }
 
+// MARK: - Generation Timezone
+
+extension TimeZone {
+    /// Timezone all generated samples are anchored to. `Pacific/Auckland` tracks
+    /// NZDT (+13) and NZST (+12) automatically based on the date being generated.
+    static let newZealand = TimeZone(identifier: "Pacific/Auckland")!
+}
+
+extension Calendar {
+    /// Calendar used to construct sample wall-clock times. Anchored to New Zealand
+    /// time so generated hours (morning/noon/evening) are independent of the machine
+    /// running generation. Gregorian (not `.current`) keeps weekday/day math deterministic.
+    static let newZealand: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .newZealand
+        return calendar
+    }()
+}
+
 // MARK: - DateFormatter Extension
 
 extension DateFormatter {
@@ -898,7 +1696,7 @@ extension DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
         formatter.calendar = Calendar(identifier: .iso8601)
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.timeZone = .newZealand
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
