@@ -908,6 +908,142 @@ public class SampleDataGenerator {
         return (((daysSinceReference % 28) + 28) % 28) + 1
     }
 
+    // MARK: - Reproductive State Model
+
+    /// A coherent, run-stable reproductive scenario derived deterministically from the
+    /// generation configuration.
+    ///
+    /// Real people occupy exactly one reproductive state at a time. Generating each
+    /// reproductive metric independently produces impossible combinations — contraceptive
+    /// logs during pregnancy, ovulation surges while on the pill, periods mid-pregnancy.
+    /// Every reproductive generator resolves this context first and only emits data that is
+    /// consistent with the person's state on the given date.
+    private struct ReproductiveContext {
+
+        /// The mutually-exclusive reproductive scenario for an entire generation run.
+        enum Scenario {
+            case naturalCycle           // ovulatory cycles, no hormonal contraception
+            case hormonalContraception  // e.g. the pill — ovulation suppressed, scheduled withdrawal bleed
+            case pregnancy              // pregnant, then postpartum / lactation afterwards
+        }
+
+        /// The reproductive state resolved for a single day; generators switch on this.
+        enum DayState: Equatable {
+            case cycling(cycleDay: Int, ovulationSuppressed: Bool)
+            case pregnant(week: Int)
+            case postpartum(week: Int)
+        }
+
+        let scenario: Scenario
+        private let windowStart: Date
+        private let pregnancyStart: Date?   // only set for the pregnancy scenario
+        private let deliveryDate: Date?     // pregnancyStart + full term
+
+        /// A full-term pregnancy spans ~40 weeks.
+        static let pregnancyTermDays = 280
+        /// Reported contraceptive method (6 == HKCategoryValueContraceptive.oral, the most common).
+        static let contraceptiveMethodOral = 6
+        /// Postpartum lactation is reported for ~6 months.
+        static let lactationWeeks = 26
+        /// Postpartum bleeding (lochia) is reported for ~6 weeks.
+        static let postpartumBleedingWeeks = 6
+
+        init(config: SampleGenerationConfig) {
+            let calendar = Calendar.newZealand
+            let start = config.dateRange.startDate
+            self.windowStart = start
+
+            // Deterministic, process-independent selection so the same config always yields the
+            // same reproductive history. (Swift's Hashable is randomly seeded per run, so we hash
+            // a stable key ourselves rather than relying on hashValue.)
+            let key = "\(config.profile.id)|\(DateFormatter.iso8601.string(from: start))|\(config.randomSeed ?? 0)"
+            let roll = ReproductiveContext.unitInterval(from: key)
+
+            // Distribution roughly reflecting a reproductive-age population.
+            if roll < 0.55 {
+                self.scenario = .naturalCycle
+                self.pregnancyStart = nil
+                self.deliveryDate = nil
+            } else if roll < 0.90 {
+                self.scenario = .hormonalContraception
+                self.pregnancyStart = nil
+                self.deliveryDate = nil
+            } else {
+                self.scenario = .pregnancy
+                // Anchor conception so the window opens partway through gestation (4–31 weeks along).
+                let weeksAlong = 4 + Int(ReproductiveContext.unitInterval(from: key + "|gestation") * 28)
+                let conception = calendar.date(byAdding: .day, value: -weeksAlong * 7, to: start)!
+                self.pregnancyStart = conception
+                self.deliveryDate = calendar.date(byAdding: .day, value: ReproductiveContext.pregnancyTermDays, to: conception)!
+            }
+        }
+
+        /// Day of the menstrual / pill-pack cycle (1...28) for a date.
+        func cycleDay(on date: Date) -> Int {
+            return SampleDataGenerator.menstrualCycleDay(for: date)
+        }
+
+        /// Resolves the reproductive state for a single date.
+        func state(on date: Date) -> DayState {
+            switch scenario {
+            case .naturalCycle:
+                return .cycling(cycleDay: cycleDay(on: date), ovulationSuppressed: false)
+            case .hormonalContraception:
+                return .cycling(cycleDay: cycleDay(on: date), ovulationSuppressed: true)
+            case .pregnancy:
+                guard let start = pregnancyStart, let delivery = deliveryDate else {
+                    return .cycling(cycleDay: cycleDay(on: date), ovulationSuppressed: false)
+                }
+                let calendar = Calendar.newZealand
+                let day = calendar.startOfDay(for: date)
+                if day < calendar.startOfDay(for: start) {
+                    return .cycling(cycleDay: cycleDay(on: date), ovulationSuppressed: false)
+                } else if day < calendar.startOfDay(for: delivery) {
+                    let weeks = (calendar.dateComponents([.day], from: start, to: date).day ?? 0) / 7
+                    return .pregnant(week: weeks)
+                } else {
+                    let weeks = (calendar.dateComponents([.day], from: delivery, to: date).day ?? 0) / 7
+                    return .postpartum(week: weeks)
+                }
+            }
+        }
+
+        /// The single date a positive pregnancy test should be logged — around week 5, and only
+        /// when that moment falls inside the generation window (you don't re-test every day).
+        var pregnancyTestPositiveDay: Date? {
+            guard scenario == .pregnancy, let start = pregnancyStart, let delivery = deliveryDate else { return nil }
+            let calendar = Calendar.newZealand
+            let testDay = calendar.date(byAdding: .day, value: 35, to: start)!  // ~5 weeks
+            guard testDay >= calendar.startOfDay(for: windowStart), testDay < delivery else { return nil }
+            return testDay
+        }
+
+        /// Cycle day used to time cycle-linked symptoms, or nil when there is no menstrual cycle
+        /// (pregnant / postpartum) so cycle-keyed symptom phases simply don't apply.
+        func symptomCycleDay(on date: Date) -> Int? {
+            switch state(on: date) {
+            case .cycling(let day, _): return day
+            case .pregnant, .postpartum: return nil
+            }
+        }
+
+        /// Multiplier for cyclical-symptom probability — hormonal contraception dampens PMS.
+        func symptomProbabilityScale(on date: Date) -> Double {
+            if case .cycling(_, let suppressed) = state(on: date), suppressed { return 0.6 }
+            return 1.0
+        }
+
+        /// FNV-1a hash folded into [0, 1) — stable across processes (unlike Swift's Hashable).
+        private static func unitInterval(from string: String) -> Double {
+            var hash: UInt64 = 0xcbf29ce484222325
+            for byte in string.utf8 {
+                hash ^= UInt64(byte)
+                hash = hash &* 0x100000001b3
+            }
+            return Double(hash >> 11) / Double(UInt64(1) << 53)
+        }
+    }
+
     /// Menstrual flow: generates a single all-day sample during days 1–5 of the cycle.
     /// Values map to HKCategoryValueMenstrualFlow: light=2, medium=3, heavy=4.
     private static func generateMenstrualFlow(
@@ -916,21 +1052,25 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
 
-        // Only generate during menstruation (days 1–5)
-        guard cycleDay <= 5 else { return [] }
+        // Menstruation only happens during a cycle — never while pregnant or postpartum.
+        guard case .cycling(let cycleDay, let ovulationSuppressed) = context.state(on: date),
+              cycleDay <= 5 else { return [] }
 
-        // Flow intensity follows a realistic bell curve: light → heavy → medium → light → light
-        // HKCategoryValueMenstrualFlow raw values: light=1, medium=2, heavy=3
+        // HKCategoryValueMenstrualFlow raw values: light=2, medium=3, heavy=4.
         let flowValue: Int
-        switch cycleDay {
-        case 1: flowValue = 2 // medium — flow building
-        case 2: flowValue = 3 // heavy — peak flow
-        case 3: flowValue = 2 // medium
-        case 4: flowValue = 1 // light
-        case 5: flowValue = 1 // light — tapering off
-        default: flowValue = 1 // light (shouldn't reach here)
+        if ovulationSuppressed {
+            // Hormonal contraception produces a lighter, more uniform withdrawal bleed.
+            flowValue = (cycleDay == 2) ? 3 : 2 // medium peak, otherwise light
+        } else {
+            // Natural period follows a realistic bell curve: builds up, peaks, then tapers.
+            switch cycleDay {
+            case 1:  flowValue = 3 // medium — flow building
+            case 2:  flowValue = 4 // heavy — peak flow
+            case 3:  flowValue = 3 // medium
+            default: flowValue = 2 // light — tapering off
+            }
         }
 
         let dayStart = calendar.startOfDay(for: date)
@@ -955,7 +1095,12 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
+
+        // Ovulation spotting requires an ovulatory cycle — not while pregnant/postpartum, and
+        // not when ovulation is suppressed by hormonal contraception.
+        guard case .cycling(let cycleDay, let ovulationSuppressed) = context.state(on: date),
+              !ovulationSuppressed else { return [] }
 
         // Mid-cycle spotting is possible around ovulation (days 13–15), ~15% chance
         guard (13...15).contains(cycleDay), Double.random(in: 0...1) < 0.15 else { return [] }
@@ -978,7 +1123,12 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
+
+        // The fertile cervical-mucus pattern only appears in an ovulatory cycle. Hormonal
+        // contraception suppresses it, and there is no pattern while pregnant/postpartum.
+        guard case .cycling(let cycleDay, let ovulationSuppressed) = context.state(on: date),
+              !ovulationSuppressed else { return [] }
 
         // No mucus observation during menstruation
         guard cycleDay > 5 else { return [] }
@@ -1013,7 +1163,12 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
+
+        // Ovulation tests only make sense in an ovulatory cycle — suppressed on hormonal
+        // contraception, and not while pregnant/postpartum.
+        guard case .cycling(let cycleDay, let ovulationSuppressed) = context.state(on: date),
+              !ovulationSuppressed else { return [] }
 
         // Only generate a test result during the fertile window (days 10–17)
         guard (10...17).contains(cycleDay) else { return [] }
@@ -1043,7 +1198,12 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
+
+        // A luteal progesterone rise only occurs after ovulation in a natural cycle — not when
+        // anovulatory on hormonal contraception, and not while pregnant/postpartum.
+        guard case .cycling(let cycleDay, let ovulationSuppressed) = context.state(on: date),
+              !ovulationSuppressed else { return [] }
 
         // Only generate a test result during the luteal phase (days 18–26)
         guard (18...26).contains(cycleDay) else { return [] }
@@ -1071,20 +1231,30 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
-
-        // Tests are typically taken around expected period (day 28 / day 1)
-        guard cycleDay == 28 || cycleDay == 1 else { return [] }
-
-        // 85% chance of testing; always negative in a standard cycle simulation
-        guard Double.random(in: 0...1) < 0.85 else { return [] }
-
+        let context = ReproductiveContext(config: config)
         guard let morningTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: date) else { return [] }
 
-        return [[
-            "sdate": DateFormatter.iso8601.string(from: morningTime),
-            "value": 1 // negative
-        ]]
+        switch context.state(on: date) {
+        case .cycling(let cycleDay, let ovulationSuppressed):
+            // Someone on hormonal contraception isn't testing for conception.
+            guard !ovulationSuppressed else { return [] }
+            // Tests are typically taken around the expected period (day 28 / day 1); negative here.
+            guard cycleDay == 28 || cycleDay == 1, Double.random(in: 0...1) < 0.85 else { return [] }
+            return [[
+                "sdate": DateFormatter.iso8601.string(from: morningTime),
+                "value": 1 // negative
+            ]]
+        case .pregnant:
+            // A single positive test on the day the pregnancy is confirmed (~5 weeks).
+            guard let positiveDay = context.pregnancyTestPositiveDay,
+                  calendar.isDate(date, inSameDayAs: positiveDay) else { return [] }
+            return [[
+                "sdate": DateFormatter.iso8601.string(from: morningTime),
+                "value": 2 // positive
+            ]]
+        case .postpartum:
+            return []
+        }
     }
 
     /// Sexual activity: random occurrence, ~25% of days.
@@ -1118,13 +1288,14 @@ public class SampleDataGenerator {
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
+        let context = ReproductiveContext(config: config)
 
-        // 60% of generated profiles use contraception
-        guard Double.random(in: 0...1) < 0.60 else { return [] }
+        // Contraceptive use is logged only in the hormonal-contraception scenario — never while
+        // pregnant or postpartum, and never in a natural (non-contracepting) cycle. It is logged
+        // every day to represent ongoing use, rather than flickering on and off day to day.
+        guard context.scenario == .hormonalContraception else { return [] }
 
-        // Oral pill is the most common — fixed per-profile using a stable hash
-        // so the same profile always uses the same method across days
-        let methodValue = 6 // oral — could be varied per-profile if desired
+        let methodValue = ReproductiveContext.contraceptiveMethodOral
 
         let dayStart = calendar.startOfDay(for: date)
         let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
@@ -1136,40 +1307,79 @@ public class SampleDataGenerator {
         ]]
     }
 
-    /// Pregnancy state: a single all-day category sample.
-    /// Not generated in a standard cycle simulation (returns empty).
-    /// Value is HKCategoryValue.notApplicable (0) — presence indicates pregnant state.
+    /// Pregnancy state: a single all-day category sample, emitted on every day the person is
+    /// pregnant. Value is HKCategoryValue.notApplicable (0) — presence indicates the state.
     private static func generatePregnancy(
         for date: Date,
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        // Pregnancy is a long-duration state that should be configured explicitly
-        // via customOverrides rather than generated automatically in a standard cycle.
-        return []
+        let calendar = Calendar.newZealand
+        let context = ReproductiveContext(config: config)
+        guard case .pregnant = context.state(on: date) else { return [] }
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": 0 // HKCategoryValue.notApplicable
+        ]]
     }
 
-    /// Lactation state: a single all-day category sample.
-    /// Not generated in a standard cycle simulation (returns empty).
-    /// Value is HKCategoryValue.notApplicable (0) — presence indicates lactating state.
+    /// Lactation state: a single all-day category sample, emitted through the postpartum period
+    /// (~6 months after delivery). Value is HKCategoryValue.notApplicable (0).
     private static func generateLactation(
         for date: Date,
         profile: HealthProfile,
         config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        // Like pregnancy, lactation is a persistent state better expressed
-        // via customOverrides for the desired date range.
-        return []
+        let calendar = Calendar.newZealand
+        let context = ReproductiveContext(config: config)
+        guard case .postpartum(let week) = context.state(on: date),
+              week < ReproductiveContext.lactationWeeks else { return [] }
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": 0 // HKCategoryValue.notApplicable
+        ]]
     }
 
-    /// Bleeding after pregnancy: a persistent state configured via customOverrides.
+    /// Bleeding after pregnancy (lochia): postpartum bleeding that tapers over ~6 weeks.
+    /// iOS 18+ only — the type identifier doesn't exist on earlier OSes, and the sample creator
+    /// force-unwraps it, so we must not emit a dict for this type there.
+    /// Uses HKCategoryValueVaginalBleeding raw values: light=2, medium=3, heavy=4.
     private static func generateBleedingAfterPregnancy(
         for date: Date, profile: HealthProfile, config: SampleGenerationConfig
     ) -> [[String: Any]] {
-        return []
+        guard #available(iOS 18.0, macOS 15.0, *) else { return [] }
+        let calendar = Calendar.newZealand
+        let context = ReproductiveContext(config: config)
+        guard case .postpartum(let week) = context.state(on: date),
+              week < ReproductiveContext.postpartumBleedingWeeks else { return [] }
+
+        // Lochia is heaviest right after delivery, then tapers.
+        let value: Int
+        switch week {
+        case 0:  value = 4 // heavy
+        case 1:  value = 3 // medium
+        default: value = 2 // light, tapering off
+        }
+
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart)!
+        return [[
+            "sdate": DateFormatter.iso8601.string(from: dayStart),
+            "edate": DateFormatter.iso8601.string(from: dayEnd),
+            "value": value
+        ]]
     }
 
-    /// Bleeding during pregnancy: a persistent state configured via customOverrides.
+    /// Bleeding during pregnancy: an abnormal event / potential complication, so it is not part
+    /// of a healthy default pregnancy and is left ungenerated.
     private static func generateBleedingDuringPregnancy(
         for date: Date, profile: HealthProfile, config: SampleGenerationConfig
     ) -> [[String: Any]] {
@@ -1267,21 +1477,28 @@ public class SampleDataGenerator {
     private static func generateSymptomSample(
         for date: Date,
         profile: HealthProfile,
+        config: SampleGenerationConfig,
         phases: [PhaseConfig],
         baseProbability: Double = 0.0,
         baseSeverityRange: ClosedRange<Int> = 1...2
     ) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
 
         var probability = baseProbability
         var severityRange = baseSeverityRange
 
-        for phase in phases {
-            if phase.days.contains(cycleDay) {
-                probability = max(probability, phase.probability)
-                severityRange = phase.severityRange
-                break
+        // Cycle-keyed phases only apply when there is a menstrual cycle. While pregnant or
+        // postpartum there is no cycle day, so only the (non-cyclical) base probability applies —
+        // this is what stops, e.g., "menstrual cramps" appearing mid-pregnancy.
+        if let cycleDay = context.symptomCycleDay(on: date) {
+            for phase in phases {
+                if phase.days.contains(cycleDay) {
+                    // Hormonal contraception dampens premenstrual symptoms.
+                    probability = max(probability, phase.probability * context.symptomProbabilityScale(on: date))
+                    severityRange = phase.severityRange
+                    break
+                }
             }
         }
 
@@ -1313,7 +1530,7 @@ public class SampleDataGenerator {
 
     /// Abdominal cramps: peak during menstruation (days 1–5) and premenstrual phase (22–28).
     private static func generateAbdominalCramps(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...3,   probability: 0.75, severityRange: 2...3),
             PhaseConfig(days: 4...5,   probability: 0.55, severityRange: 2...3),
             PhaseConfig(days: 22...28, probability: 0.35, severityRange: 2...3)
@@ -1322,7 +1539,7 @@ public class SampleDataGenerator {
 
     /// Acne: elevated during late luteal phase (days 20–28) due to hormonal shifts.
     private static func generateAcne(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 20...28, probability: 0.40, severityRange: 2...3),
             PhaseConfig(days: 1...5,   probability: 0.25, severityRange: 2...2)
         ])
@@ -1333,7 +1550,9 @@ public class SampleDataGenerator {
     /// noChange=1, decreased=2, increased=3. Premenstrual cravings (increased) dominate days 20–28.
     private static func generateAppetiteChanges(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
+        // Cyclical appetite changes require a menstrual cycle — skip while pregnant/postpartum.
+        guard let cycleDay = context.symptomCycleDay(on: date) else { return [] }
         let phases: [(days: ClosedRange<Int>, probability: Double)] = [
             (20...28, 0.45),
             (1...3,   0.25)
@@ -1342,6 +1561,7 @@ public class SampleDataGenerator {
         for phase in phases {
             if phase.days.contains(cycleDay) { probability = phase.probability; break }
         }
+        probability *= context.symptomProbabilityScale(on: date) // contraception dampens PMS
         let stressMultiplier: Double
         switch profile.stressLevel {
         case .veryHigh: stressMultiplier = 1.6
@@ -1369,14 +1589,14 @@ public class SampleDataGenerator {
 
     /// Bladder incontinence: low baseline; slightly elevated premenstrually.
     private static func generateBladderIncontinence(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 22...28, probability: 0.12, severityRange: 2...2)
         ], baseProbability: 0.05)
     }
 
     /// Bloating: strongest premenstrually; mild around ovulation.
     private static func generateBloating(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 22...28, probability: 0.55, severityRange: 2...3),
             PhaseConfig(days: 1...3,   probability: 0.35, severityRange: 2...3),
             PhaseConfig(days: 13...15, probability: 0.20, severityRange: 2...2)
@@ -1385,7 +1605,7 @@ public class SampleDataGenerator {
 
     /// Breast pain (mastalgia): classic premenstrual symptom, peaks days 18–28.
     private static func generateBreastPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 18...28, probability: 0.45, severityRange: 2...3),
             PhaseConfig(days: 1...5,   probability: 0.20, severityRange: 2...2)
         ])
@@ -1393,42 +1613,42 @@ public class SampleDataGenerator {
 
     /// Chills: low baseline; elevated during menstruation.
     private static func generateChills(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...3, probability: 0.20, severityRange: 2...2)
         ], baseProbability: 0.04)
     }
 
     /// Constipation: progesterone-driven; most common in the luteal phase (days 16–28).
     private static func generateConstipation(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 16...28, probability: 0.25, severityRange: 2...3)
         ], baseProbability: 0.05)
     }
 
     /// Diarrhea: prostaglandin-driven; peak at onset of menstruation (days 1–3).
     private static func generateDiarrhea(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...3, probability: 0.30, severityRange: 2...3)
         ], baseProbability: 0.03)
     }
 
     /// Dizziness: mild baseline; slightly elevated during heavy flow (days 1–2).
     private static func generateDizziness(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...2, probability: 0.20, severityRange: 2...2)
         ], baseProbability: 0.05)
     }
 
     /// Dry skin: linked to oestrogen drop late in cycle; low but persistent baseline.
     private static func generateDrySkin(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 20...28, probability: 0.20, severityRange: 2...2)
         ], baseProbability: 0.08)
     }
 
     /// Fatigue: elevated during menstruation and premenstrual phase; stressed profile amplifies.
     private static func generateFatigue(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...5,   probability: 0.60, severityRange: 2...3),
             PhaseConfig(days: 22...28, probability: 0.45, severityRange: 2...3)
         ], baseProbability: 0.10)
@@ -1436,14 +1656,14 @@ public class SampleDataGenerator {
 
     /// Hair loss: chronic low-level symptom; slightly elevated post-menstruation.
     private static func generateHairLoss(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 6...12, probability: 0.12, severityRange: 2...2)
         ], baseProbability: 0.05)
     }
 
     /// Headache: premenstrual oestrogen drop causes tension headaches; stress amplifies.
     private static func generateHeadache(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 22...28, probability: 0.40, severityRange: 2...3),
             PhaseConfig(days: 1...3,   probability: 0.30, severityRange: 2...3)
         ], baseProbability: 0.06)
@@ -1451,14 +1671,14 @@ public class SampleDataGenerator {
 
     /// Hot flashes: driven by oestrogen fluctuations late in the luteal phase.
     private static func generateHotFlashes(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 20...28, probability: 0.25, severityRange: 2...3)
         ], baseProbability: 0.04)
     }
 
     /// Lower back pain: peak during menstruation; mild premenstrual presence.
     private static func generateLowerBackPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...4,   probability: 0.60, severityRange: 2...3),
             PhaseConfig(days: 22...28, probability: 0.30, severityRange: 2...3)
         ])
@@ -1466,7 +1686,7 @@ public class SampleDataGenerator {
 
     /// Memory lapse: linked to hormonal brain-fog, especially late-luteal and stressed profiles.
     private static func generateMemoryLapse(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 22...28, probability: 0.22, severityRange: 2...3)
         ], baseProbability: 0.06)
     }
@@ -1477,10 +1697,13 @@ public class SampleDataGenerator {
     /// Strong premenstrual signal, eases after period starts.
     private static func generateMoodChanges(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
+        let context = ReproductiveContext(config: config)
+        // PMS/PMDD mood changes require a menstrual cycle — skip while pregnant/postpartum.
+        guard let cycleDay = context.symptomCycleDay(on: date) else { return [] }
         var probability = 0.0
         if (20...28).contains(cycleDay)  { probability = 0.55 }
         else if (1...3).contains(cycleDay) { probability = 0.30 }
+        probability *= context.symptomProbabilityScale(on: date) // contraception dampens PMS
         let stressMultiplier: Double
         switch profile.stressLevel {
         case .veryHigh: stressMultiplier = 1.6
@@ -1498,7 +1721,7 @@ public class SampleDataGenerator {
 
     /// Nausea: common at onset of menstruation due to prostaglandins; baseline for other days.
     private static func generateNausea(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...3,   probability: 0.35, severityRange: 2...3),
             PhaseConfig(days: 22...28, probability: 0.15, severityRange: 2...2)
         ], baseProbability: 0.03)
@@ -1506,14 +1729,14 @@ public class SampleDataGenerator {
 
     /// Night sweats: hormonally driven; primarily premenstrual and stress-related.
     private static func generateNightSweats(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 20...28, probability: 0.22, severityRange: 2...3)
         ], baseProbability: 0.05)
     }
 
     /// Pelvic pain: menstrual cramping (days 1–5) and mittelschmerz around ovulation (13–15).
     private static func generatePelvicPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...4,   probability: 0.60, severityRange: 2...3),
             PhaseConfig(days: 13...15, probability: 0.25, severityRange: 2...2),
             PhaseConfig(days: 22...28, probability: 0.20, severityRange: 2...2)
@@ -1522,26 +1745,26 @@ public class SampleDataGenerator {
 
     /// Rapid, pounding, or fluttering heartbeat: low baseline; slightly elevated premenstrually.
     private static func generateRapidPoundingOrFlutteringHeartbeat(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 22...28, probability: 0.12, severityRange: 2...2)
         ], baseProbability: 0.04)
     }
 
     /// Runny nose: non-cyclic; low constant probability, stress-independent.
     private static func generateRunnyNose(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.06)
     }
 
     /// Sinus congestion: non-cyclic; low constant probability.
     private static func generateSinusCongestion(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.06)
     }
 
     /// Skipped heartbeat: very low probability; independent of cycle phase.
     private static func generateSkippedHeartbeat(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.03)
     }
 
@@ -1550,10 +1773,13 @@ public class SampleDataGenerator {
     /// Elevated premenstrually and during menstruation; stress-driven otherwise.
     private static func generateSleepChanges(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
         let calendar = Calendar.newZealand
-        let cycleDay = menstrualCycleDay(for: date)
-        var probability = 0.08 // baseline
-        if (20...28).contains(cycleDay)  { probability = 0.35 }
-        else if (1...5).contains(cycleDay) { probability = 0.25 }
+        let context = ReproductiveContext(config: config)
+        var probability = 0.08 // baseline — sleep disruption can occur in any reproductive state
+        if let cycleDay = context.symptomCycleDay(on: date) {
+            let scale = context.symptomProbabilityScale(on: date) // contraception dampens PMS
+            if (20...28).contains(cycleDay)  { probability = max(probability, 0.35 * scale) }
+            else if (1...5).contains(cycleDay) { probability = max(probability, 0.25 * scale) }
+        }
         let stressMultiplier: Double
         switch profile.stressLevel {
         case .veryHigh: stressMultiplier = 1.6
@@ -1571,27 +1797,27 @@ public class SampleDataGenerator {
 
     /// Sore throat: non-cyclic; low constant probability.
     private static func generateSoreThroat(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.05)
     }
 
     /// Vaginal dryness: low oestrogen during luteal phase; elevated days 18–28.
     private static func generateVaginalDryness(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 18...28, probability: 0.20, severityRange: 2...3)
         ], baseProbability: 0.05)
     }
 
     /// Vomiting: rare; occurs at peak prostaglandin surge (days 1–2).
     private static func generateVomiting(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...2, probability: 0.12, severityRange: 2...3)
         ], baseProbability: 0.02)
     }
 
     /// Body and muscle ache: mild cyclic pattern during menstruation; low baseline.
     private static func generateBodyAndMuscleAche(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 1...5, probability: 0.35, severityRange: 2...3),
             PhaseConfig(days: 22...28, probability: 0.15, severityRange: 2...2)
         ], baseProbability: 0.05)
@@ -1599,56 +1825,56 @@ public class SampleDataGenerator {
 
     /// Chest tightness or pain: non-cyclic; rare.
     private static func generateChestTightnessOrPain(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.03)
     }
 
     /// Coughing: non-cyclic; low probability.
     private static func generateCoughing(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.05)
     }
 
     /// Fainting: very rare; non-cyclic.
     private static func generateFainting(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.01)
     }
 
     /// Fever: non-cyclic; very low probability.
     private static func generateFever(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.02)
     }
 
     /// Heartburn: progesterone relaxes lower oesophageal sphincter; elevated in luteal phase.
     private static func generateHeartburn(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [
             PhaseConfig(days: 16...28, probability: 0.20, severityRange: 2...3)
         ], baseProbability: 0.04)
     }
 
     /// Loss of smell: non-cyclic; very low probability.
     private static func generateLossOfSmell(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.02)
     }
 
     /// Loss of taste: non-cyclic; very low probability.
     private static func generateLossOfTaste(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.02)
     }
 
     /// Shortness of breath: mild; non-cyclic.
     private static func generateShortnessOfBreath(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.04)
     }
 
     /// Wheezing: non-cyclic; low probability.
     private static func generateWheezing(for date: Date, profile: HealthProfile, config: SampleGenerationConfig) -> [[String: Any]] {
-        generateSymptomSample(for: date, profile: profile, phases: [],
+        generateSymptomSample(for: date, profile: profile, config: config, phases: [],
                               baseProbability: 0.04)
     }
 
